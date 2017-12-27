@@ -28,8 +28,7 @@ public class OrderDaoImpl implements OrderDAO{
 
 
     public List<Orders> getorders() {
+
         return sessionFactory.getCurrentSession().createQuery("FROM Orders",Orders.class).getResultList();
     }
-
-
 }

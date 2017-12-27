@@ -3,7 +3,7 @@ package com.foodorderingapp.dto;
 public class FoodQuantity {
 
     private int foodId;
-    private int quantities;
+    private int quantity;
 
 
     public int getFoodId() {
@@ -14,11 +14,12 @@ public class FoodQuantity {
         this.foodId = foodId;
     }
 
-    public int getQuantities() {
-        return quantities;
+
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuantities(int quantities) {
-        this.quantities = quantities;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

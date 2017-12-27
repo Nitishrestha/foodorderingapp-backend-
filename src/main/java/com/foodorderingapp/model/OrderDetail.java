@@ -12,8 +12,13 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="order_detail_id")
     private int orderDetailId;
-    @Column(name="quantities")
-    private int quantities;
+    @Column(name="quantity")
+    private int quantity;
+    @Column(name="unit_price")
+    private double unitPrice;
+    @Column(name="sub_total")
+    private double subTotal;
+
 
     @ManyToOne
     @JoinColumn(name="food_id")
@@ -32,14 +37,6 @@ public class OrderDetail {
         this.orderDetailId = orderDetailId;
     }
 
-    public int getQuantities() {
-        return quantities;
-    }
-
-    public void setQuantities(int quantities) {
-        this.quantities = quantities;
-    }
-
     public Food getFood() {
         return food;
     }
@@ -54,5 +51,29 @@ public class OrderDetail {
 
     public void setOrders(Orders orders) {
         this.orders = orders;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
     }
 }

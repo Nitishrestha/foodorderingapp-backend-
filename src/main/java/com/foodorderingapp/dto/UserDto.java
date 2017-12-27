@@ -14,6 +14,7 @@ public class UserDto {
     private String middleName;
     private String lastName;;
     private String contactNo;
+    private int balance;
 
 
 
@@ -89,5 +90,13 @@ public class UserDto {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 }

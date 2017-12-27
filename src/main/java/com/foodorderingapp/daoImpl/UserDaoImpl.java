@@ -18,15 +18,17 @@ public class UserDaoImpl implements UserDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void addUser(User user) {
+    public Boolean addUser(User user) {
 
         try {
 
             sessionFactory.getCurrentSession().save(user);
+            return true;
 
         } catch (Exception ex) {
 
             System.out.println(ex.getMessage());
+            return false;
         }
     }
 
@@ -36,7 +38,11 @@ public class UserDaoImpl implements UserDAO {
 
     }
 
-    public User getUserByEmailAndPassword(User user) {
+    public User getUser(int userId) {
+        return sessionFactory.getCurrentSession().get(User.class, userId);
+    }
+
+    public User getUserByEmail(User user) {
 
         try {
 
@@ -53,5 +59,22 @@ public class UserDaoImpl implements UserDAO {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
+
+    public User getUserByEmailId(User user) {
+
+        try {
+
+            User user1= sessionFactory.getCurrentSession().
+                    createQuery("FROM User WHERE email=:email",User.class).
+                    setParameter("email",user.getEmail()).getSingleResult();
+
+            return user1;
+
+        } catch (Exception ex) {
+
+            return null;
+        }
+
     }
 }

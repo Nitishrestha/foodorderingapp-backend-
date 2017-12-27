@@ -20,7 +20,6 @@ public class User{
     private int userId;
     @Column(name="first_name")
     private String firstName;
-
     @Column(name="middle_name",nullable = true)
     private String middleName;
     @Column(name="last_name")
@@ -35,17 +34,9 @@ public class User{
     private String address;
     @Column(name="user_role")
     private String userRole;
+    @Column(name="balance")
+    private double balance;
 
-
-
-    public User(){
-
-    }
-
-//    public User(String message){
-//        this.message=message;
-//
-//    }
 
     public int getUserId() {
         return userId;
@@ -55,7 +46,6 @@ public class User{
         this.userId = userId;
     }
 
-
     public String getUserPassword() {
         return userPassword;
     }
@@ -63,7 +53,6 @@ public class User{
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
-
 
     public String getEmail() {
         return email;
@@ -119,5 +108,13 @@ public class User{
 
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }

@@ -1,6 +1,8 @@
 package com.foodorderingapp.serviceImpl;
 
 import com.foodorderingapp.dao.UserDAO;
+import com.foodorderingapp.dto.LoginDto;
+import com.foodorderingapp.dto.UserDto;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,38 +16,66 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserDAO userDAO;
 
-    public void addUser(User user) {
+    public void addUser(UserDto userDto) {
 
-        userDAO.addUser(user);
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setMiddleName(userDto.getMiddleName());
+        user.setLastName(userDto.getLastName());
+        user.setContactNo(userDto.getContactNo());
+        user.setUserPassword(userDto.getUserPassword());
+        user.setAddress(userDto.getAddress());
+        user.setEmail(userDto.getEmail());
+        user.setBalance(userDto.getBalance());
+        user.setUserRole("user");
 
+        User user1 = userDAO.getUserByEmailId(user);
+
+        if (user1 != null) {
+
+            throw new IllegalArgumentException("plz rewite email");
+
+        } else if (user1 == null) {
+
+            userDAO.addUser(user);
+        }
     }
 
     public List<User> getUsers() {
 
-       return userDAO.getUsers();
+        return userDAO.getUsers();
     }
 
-    public User getUserByEmail(String email) {
 
-       return null;
-    }
+    public LoginDto verifyUser(LoginDto loginDto) {
 
-    public User verifyUser(User user) {
-        User user1=userDAO.getUserByEmailAndPassword(user);
-
-        User user2=new User();
-        user2.setUserId(user1.getUserId());
-        user2.setFirstName(user1.getFirstName());
-        user2.setUserRole(user1.getUserRole());
+        User user = new User();
+        user.setEmail(loginDto.getEmail());
+        user.setUserPassword(loginDto.getUserPassword());
 
 
-        if(user1==null){
+        User user1 = userDAO.getUserByEmail(user);
 
-            return null;
+        LoginDto loginDto1 = new LoginDto();
+        loginDto1.setEmail(user1.getEmail());
+        loginDto1.setId(user1.getUserId());
+        loginDto1.setFirstName(user1.getFirstName());
+        loginDto1.setMiddleName(user1.getMiddleName());
+        loginDto1.setLastName(user1.getLastName());
 
-        }else{
 
-            return user2;
+        if (user1 == null) {
+
+            throw new IllegalArgumentException("user not exits");
+
+        } else {
+
+            return loginDto1;
         }
     }
+
+    public User getUser(int userId) {
+        return userDAO.getUser(userId);
+    }
+
 }

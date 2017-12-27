@@ -20,35 +20,18 @@ public class OrdersController {
 
     @Autowired
     OrdersService ordersService;
-    @Autowired
-    OrderDetailService orderDetailService;
 
     @PostMapping
     @ResponseBody
     public void addOrder(@RequestBody OrderDto orderDto) {
 
-        Food food = new Food();
-        Orders orders = new Orders();
-        OrderDetail orderDetail = new OrderDetail();
+        ordersService.addOrders(orderDto);
 
-        User user = new User();
-        user.setUserId(orderDto.getUserId());
-        orders.setUser(user);
-        ordersService.addOrders(orders);
-
-        for (FoodQuantity foodQuantity : orderDto.getFoodList()) {
-            food.setId(foodQuantity.getFoodId());
-            orderDetail.setOrders(orders);
-            orderDetail.setFood(food);
-            orderDetail.setQuantities(foodQuantity.getQuantities());
-
-            orderDetailService.addOrderDetail(orderDetail);
-
-        }
     }
 
     @GetMapping
     public List<Orders> getOrders(){
         return  ordersService.getOrders();
     }
+
 }
