@@ -56,7 +56,6 @@ public class FoodDAOImpl implements FoodDAO {
     public List<Food> getFoodByRestaurantId(int id) {
         String query = "FROM Food WHERE restaurant= :restaurant";
         Restaurant restaurant = restaurantDAO.getRestaurantById(id);
-        System.out.println("food dao called");
         System.out.println(restaurant);
         return sessionFactory
                     .getCurrentSession()
