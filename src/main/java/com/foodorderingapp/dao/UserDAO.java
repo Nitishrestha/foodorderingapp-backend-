@@ -1,11 +1,16 @@
 package com.foodorderingapp.dao;
 
+import com.foodorderingapp.dto.UserListDto;
 import com.foodorderingapp.model.User;
 
 import java.util.List;
 
 public interface UserDAO {
-     void addUser(User user);
+     Boolean addUser(User user);
      List<User> getUsers();
-      User getUserByEmailAndPassword(User user);
+     User getUser(int userId);
+    User getUserByEmail(User user);
+    User getUserByEmailId(User user);
+    void update(User user);
+   List<UserListDto> getByUserId(int userId);
 }

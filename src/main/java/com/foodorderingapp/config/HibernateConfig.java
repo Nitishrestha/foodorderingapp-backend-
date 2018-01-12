@@ -16,8 +16,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan(basePackages = { "com.foodorderingapp" })
 @EnableTransactionManagement
-public class HibernateConfig {
-    private final static String DATABASE_URL = "jdbc:mysql://localhost:3306/foodorderingappdb";
+public class
+HibernateConfig {
+    private final static String DATABASE_URL = "jdbc:mysql://localhost:3306/foodorderingapp";
     private final static String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
     private final static String DATABASE_DIALECT = "org.hibernate.dialect.MySQLDialect";
     private final static String DATABASE_USERNAME = "root";
@@ -31,18 +32,15 @@ public class HibernateConfig {
         dataSource.setUrl(DATABASE_URL);
         dataSource.setUsername(DATABASE_USERNAME);
         dataSource.setPassword(DATABASE_PASSWORD);
-
+        System.out.println(dataSource);
         return dataSource;
     }
 
     @Bean
     public SessionFactory getSessionfactory(DataSource dataSource) {
         LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource);
-
         builder.addProperties(getHibernateProperties());
-
         builder.scanPackages("com.foodorderingapp");
-
         return builder.buildSessionFactory();
 
     }
@@ -62,7 +60,6 @@ public class HibernateConfig {
     public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory)
     {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
-
         return transactionManager;
     }
 }

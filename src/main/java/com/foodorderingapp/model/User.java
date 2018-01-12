@@ -9,9 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name="tbl_users")
-public class User{
-
-//    String message;
+public class User {
 
 
     @Id
@@ -20,8 +18,7 @@ public class User{
     private int userId;
     @Column(name="first_name")
     private String firstName;
-
-    @Column(name="middle_name",nullable = true)
+    @Column(name="middle_name")
     private String middleName;
     @Column(name="last_name")
     private String lastName;
@@ -35,17 +32,10 @@ public class User{
     private String address;
     @Column(name="user_role")
     private String userRole;
+    @Column(name="balance")
+    private int balance;
 
 
-
-    public User(){
-
-    }
-
-//    public User(String message){
-//        this.message=message;
-//
-//    }
 
     public int getUserId() {
         return userId;
@@ -54,7 +44,6 @@ public class User{
     public void setUserId(int userId) {
         this.userId = userId;
     }
-
 
     public String getUserPassword() {
         return userPassword;
@@ -119,5 +108,14 @@ public class User{
 
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
+    }
+
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 }

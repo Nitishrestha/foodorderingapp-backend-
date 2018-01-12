@@ -1,11 +1,13 @@
 package com.foodorderingapp.service;
 
+import com.foodorderingapp.dto.OrderDetailDto;
 import com.foodorderingapp.model.OrderDetail;
 
 import java.util.List;
 
 public interface OrderDetailService {
 
-    void addOrderDetail(OrderDetail orderDetail);
-    List<OrderDetail> getOrderDetails();
+    List<OrderDetailDto> getOrderDetails();
+    List<OrderDetail> getByUserId(int userId);
+
 }

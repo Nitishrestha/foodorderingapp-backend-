@@ -1,0 +1,62 @@
+package com.foodorderingapp.dto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserListDto {
+
+    private int orderId;
+    private int userId;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private List<FoodRes> foodResList=new ArrayList<FoodRes>();
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public List<FoodRes> getFoodResList() {
+        return foodResList;
+    }
+
+    public void setFoodResList(List<FoodRes> foodResList) {
+        this.foodResList = foodResList;
+    }
+}

@@ -1,10 +1,13 @@
 package com.foodorderingapp.service;
 
-import com.foodorderingapp.model.Orders;
+import com.foodorderingapp.dto.BillDto;
+import com.foodorderingapp.dto.OrderDto;
+import com.foodorderingapp.dto.OrderListDto;
 
 import java.util.List;
 
 public interface OrdersService {
-    void addOrders(Orders orders);
-    List<Orders> getOrders();
+    BillDto add(OrderDto orderDto);
+    List<OrderListDto> getOrder();
+    void update(int orderId);
 }

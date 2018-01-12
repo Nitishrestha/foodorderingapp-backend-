@@ -1,12 +1,11 @@
 package com.foodorderingapp.dto;
 
-
 public class LoginDto {
 
+    private int id;
     private String email;
     private String userPassword;
-
-
+    private String firstName;
 
     public String getEmail() {
         return email;
@@ -16,7 +15,6 @@ public class LoginDto {
         this.email = email;
     }
 
-
     public String getUserPassword() {
         return userPassword;
     }
@@ -24,4 +22,22 @@ public class LoginDto {
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+
 }

@@ -2,23 +2,40 @@ package com.foodorderingapp.dto;
 
 public class FoodQuantity {
 
-    private int foodId;
-    private int quantities;
+    private String foodName;
+    private int foodPrice;
+    private String restaurantName;
+    private int quantity;
 
-
-    public int getFoodId() {
-        return foodId;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public int getQuantities() {
-        return quantities;
+    public String getFoodName() {
+        return foodName;
     }
 
-    public void setQuantities(int quantities) {
-        this.quantities = quantities;
+    public void setFoodName(String foodName) {
+        this.foodName = foodName;
+    }
+
+    public int getFoodPrice() {
+        return foodPrice;
+    }
+
+    public void setFoodPrice(int foodPrice) {
+        this.foodPrice = foodPrice;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 }

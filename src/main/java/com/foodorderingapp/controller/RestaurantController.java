@@ -1,6 +1,7 @@
 package com.foodorderingapp.controller;
 
-import com.foodorderingapp.dto.*;
+import com.foodorderingapp.model.Food;
+import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.FoodService;
 import com.foodorderingapp.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,14 @@ import java.util.List;
 @RequestMapping(value = "/restaurants")
 public class RestaurantController {
 
-    @Autowired
-    private RestaurantService restaurantService;
+    private static RestaurantService restaurantService;
+    private static FoodService foodService;
 
     @Autowired
-    private FoodService foodService;
+    public RestaurantController(RestaurantService restaurantService, FoodService foodService){
+        this.restaurantService = restaurantService;
+        this.foodService = foodService;
+    }
 
     @GetMapping
     public List<Restaurant> getAllRestaurants() {
@@ -36,8 +40,9 @@ public class RestaurantController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteRestaurant(@PathVariable int id) {
+    public int deleteRestaurant(@PathVariable int id) {
         restaurantService.deleteRestaurant(getRestaurantById(id));
+        return id;
     }
 
     @PutMapping(value = "/{id}")
@@ -52,12 +57,14 @@ public class RestaurantController {
     }
 
     @GetMapping(value = "/{id}/activate")
-    public void activateRestaurant(@PathVariable int id){
+    public int activateRestaurant(@PathVariable int id){
         restaurantService.activate(id);
+        return id;
     }
 
     @GetMapping(value = "/{id}/deactivate")
-    public void deactivateRestaurant(@PathVariable int id){
+    public int deactivateRestaurant(@PathVariable int id){
         restaurantService.deactivate(id);
+        return id;
     }
 }

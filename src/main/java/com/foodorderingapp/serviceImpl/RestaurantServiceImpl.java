@@ -1,8 +1,7 @@
 package com.foodorderingapp.serviceImpl;
 
 import com.foodorderingapp.dao.RestaurantDAO;
-import com.foodorderingapp.dto.Food;
-import com.foodorderingapp.dto.Restaurant;
+import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,13 @@ import java.util.List;
 @Service("restaurantService")
 public class RestaurantServiceImpl implements RestaurantService {
 
+
+    private final RestaurantDAO restaurantDAO;
+
     @Autowired
-    private RestaurantDAO restaurantDAO;
+    public RestaurantServiceImpl(RestaurantDAO restaurantDAO){
+        this.restaurantDAO=restaurantDAO;
+    }
 
     public Restaurant addRestaurant(Restaurant restaurant) {
         return restaurantDAO.addRestaurant(restaurant);
@@ -32,7 +36,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant1.setName(restaurant.getName());
         restaurant1.setAddress(restaurant.getAddress());
         restaurant1.setContact(restaurant.getContact());
-
         return restaurantDAO.updateRestaurant(restaurant1);
     }
     public List<Restaurant> getAll() {
@@ -42,20 +45,22 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantDAO.getRestaurantById(id);
     }
 
-    public void deactivate(int id) {
+    public int deactivate(int id) {
         if(!restaurantDAO.getRestaurantById(id).equals(null)){
             if(getStatus(id)!=false) {
                 restaurantDAO.deactivate(id);
             }
         }
+        return id;
     }
 
-    public void activate(int id) {
+    public int activate(int id) {
         if(!restaurantDAO.getRestaurantById(id).equals(null)){
             if(getStatus(id)!=true) {
                 restaurantDAO.activate(id);
             }
         }
+        return id;
     }
 
     public boolean getStatus(int id) {

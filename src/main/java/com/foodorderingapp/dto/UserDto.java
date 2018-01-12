@@ -5,7 +5,6 @@ package com.foodorderingapp.dto;
 public class UserDto {
 
     private int userId;
-
     private String userPassword;
     private String email;
     private String address;
@@ -16,7 +15,6 @@ public class UserDto {
     private String contactNo;
 
 
-
     public int getUserId() {
         return userId;
     }
@@ -24,7 +22,6 @@ public class UserDto {
     public void setUserId(int userId) {
         this.userId = userId;
     }
-
 
     public String getUserPassword() {
         return userPassword;
@@ -58,7 +55,6 @@ public class UserDto {
         this.userRole = userRole;
     }
 
-
     public String getMiddleName() {
         return middleName;
     }
@@ -90,4 +86,5 @@ public class UserDto {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
 }

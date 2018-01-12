@@ -2,8 +2,7 @@ package com.foodorderingapp.serviceImpl;
 
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
-import com.foodorderingapp.dto.Food;
-import com.foodorderingapp.dto.Restaurant;
+import com.foodorderingapp.model.Food;
 import com.foodorderingapp.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,15 @@ import java.util.List;
 @Service("foodService")
 public class FoodServiceImpl implements FoodService{
 
+
+    private final FoodDAO foodDAO;
+    private final RestaurantDAO restaurantDAO;
+
     @Autowired
-    private FoodDAO foodDAO;
+    public FoodServiceImpl(FoodDAO foodDAO,RestaurantDAO restaurantDAO){
+            this.foodDAO=foodDAO;
+            this.restaurantDAO=restaurantDAO;
+    }
 
     public boolean deleteFood(Food food) {
         return foodDAO.deleteFood(food);
@@ -41,5 +47,9 @@ public class FoodServiceImpl implements FoodService{
 
     public List<Food> addFoodsToRestaurant(List<Food> foodList) {
         return foodDAO.addFoodsToRestaurant(foodList);
+    }
+
+    public Food getFoodByName(String foodName) {
+        return foodDAO.getFoodByName(foodName);
     }
 }

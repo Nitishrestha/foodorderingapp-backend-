@@ -1,6 +1,6 @@
 package com.foodorderingapp.dao;
 
-import com.foodorderingapp.dto.Food;
+import com.foodorderingapp.model.Food;
 
 import java.util.List;
 
@@ -14,4 +14,5 @@ public interface FoodDAO {
     Food getFoodById(int id);
     List<Food> getFoodByRestaurantId(int id);
     List<Food> addFoodsToRestaurant(List<Food> foodList);
+    Food getFoodByName(String foodName);
 }

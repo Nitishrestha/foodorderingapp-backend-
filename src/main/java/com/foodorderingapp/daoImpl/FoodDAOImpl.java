@@ -2,24 +2,26 @@ package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
-import com.foodorderingapp.dto.Food;
-import com.foodorderingapp.dto.Restaurant;
+import com.foodorderingapp.model.Food;
+import com.foodorderingapp.model.Restaurant;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-
 
 @Repository("foodDAO")
 @Transactional
 public class FoodDAOImpl implements FoodDAO {
 
+    private final SessionFactory sessionFactory;
+    private final RestaurantDAO restaurantDAO;
+
     @Autowired
-    private SessionFactory sessionFactory;
-    @Autowired
-    private RestaurantDAO restaurantDAO;
+    public FoodDAOImpl(SessionFactory sessionFactory, RestaurantDAO restaurantDAO){
+        this.sessionFactory = sessionFactory;
+        this.restaurantDAO = restaurantDAO;
+    }
 
     public boolean deleteFood(Food food) {
         try{
@@ -43,25 +45,25 @@ public class FoodDAOImpl implements FoodDAO {
 
     public List<Food> getAll() {
         return sessionFactory
-                    .getCurrentSession()
-                        .createQuery("FROM Food", Food.class)
-                            .getResultList();
+                .getCurrentSession()
+                .createQuery("FROM Food", Food.class)
+                .getResultList();
     }
 
     public Food getFoodById(int id) {
         return sessionFactory.getCurrentSession().get(Food.class, id);
     }
 
-
     public List<Food> getFoodByRestaurantId(int id) {
         String query = "FROM Food WHERE restaurant= :restaurant";
         Restaurant restaurant = restaurantDAO.getRestaurantById(id);
+        System.out.println("food dao called");
         System.out.println(restaurant);
         return sessionFactory
-                    .getCurrentSession()
-                        .createQuery(query,Food.class)
-                            .setParameter("restaurant",restaurant)
-                                .getResultList();
+                .getCurrentSession()
+                .createQuery(query,Food.class)
+                .setParameter("restaurant",restaurant)
+                .getResultList();
     }
 
     public List<Food> addFoodsToRestaurant(List<Food> foodList) {
@@ -69,8 +71,8 @@ public class FoodDAOImpl implements FoodDAO {
             for(Food food:foodList){
                 food.getRestaurant().setId(food.getRestaurantId());
                 sessionFactory
-                        .getCurrentSession()
-                            .persist(food);
+                .getCurrentSession()
+                .persist(food);
             }
             sessionFactory.getCurrentSession().flush();
             return foodList;
@@ -79,5 +81,14 @@ public class FoodDAOImpl implements FoodDAO {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public Food getFoodByName(String foodName) {
+
+        return  sessionFactory
+                .getCurrentSession()
+                .createQuery("FROM Food where name=:foodName",Food.class)
+                .setParameter("foodName",foodName).
+                getSingleResult();
     }
 }

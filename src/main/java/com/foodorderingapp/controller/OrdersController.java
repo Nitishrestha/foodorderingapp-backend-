@@ -1,11 +1,9 @@
 package com.foodorderingapp.controller;
 
-import com.foodorderingapp.dto.Food;
-import com.foodorderingapp.dto.FoodQuantity;
+import com.foodorderingapp.dto.BillDto;
 import com.foodorderingapp.dto.OrderDto;
-import com.foodorderingapp.model.OrderDetail;
+import com.foodorderingapp.dto.OrderListDto;
 import com.foodorderingapp.model.Orders;
-import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.OrderDetailService;
 import com.foodorderingapp.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,40 +13,30 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
-@CrossOrigin
 public class OrdersController {
 
+    private final OrdersService ordersService;
+    private final OrderDetailService orderDetailService;
+
     @Autowired
-    OrdersService ordersService;
-    @Autowired
-    OrderDetailService orderDetailService;
+    public OrdersController(OrdersService ordersService,OrderDetailService orderDetailService){
+        this.ordersService=ordersService;
+        this.orderDetailService=orderDetailService;
+    }
 
     @PostMapping
-    @ResponseBody
-    public void addOrder(@RequestBody OrderDto orderDto) {
-
-        Food food = new Food();
-        Orders orders = new Orders();
-        OrderDetail orderDetail = new OrderDetail();
-
-        User user = new User();
-        user.setUserId(orderDto.getUserId());
-        orders.setUser(user);
-        ordersService.addOrders(orders);
-
-        for (FoodQuantity foodQuantity : orderDto.getFoodList()) {
-            food.setId(foodQuantity.getFoodId());
-            orderDetail.setOrders(orders);
-            orderDetail.setFood(food);
-            orderDetail.setQuantities(foodQuantity.getQuantities());
-
-            orderDetailService.addOrderDetail(orderDetail);
-
-        }
+    public BillDto addOrder(@RequestBody OrderDto orderDto) {
+        return ordersService.add(orderDto);
     }
 
     @GetMapping
-    public List<Orders> getOrders(){
-        return  ordersService.getOrders();
+    public List<OrderListDto> getOrder(){
+        return ordersService.getOrder();
+    }
+
+    @PutMapping("/{orderId}")
+    public String update(@PathVariable int orderId){
+        ordersService.update(orderId);
+        return "Order updated successfully!";
     }
 }

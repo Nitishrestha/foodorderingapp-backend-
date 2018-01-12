@@ -1,8 +1,7 @@
 package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.RestaurantDAO;
-import com.foodorderingapp.dto.Food;
-import com.foodorderingapp.dto.Restaurant;
+import com.foodorderingapp.model.Restaurant;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,37 +14,43 @@ import java.util.List;
 @Transactional
 public class RestaurantDAOImpl implements RestaurantDAO {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
+    @Autowired
+    public RestaurantDAOImpl(SessionFactory sessionFactory){
+        this.sessionFactory = sessionFactory;
+    }
 
     public boolean deleteRestaurant(Restaurant restaurant) {
-        try{
+        try {
             sessionFactory.getCurrentSession().delete(restaurant);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
     }
 
     public Restaurant addRestaurant(Restaurant restaurant) {
-        try{
+        try {
             sessionFactory.getCurrentSession().persist(restaurant);
             sessionFactory.getCurrentSession().flush();
             return restaurant;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
     public boolean updateRestaurant(Restaurant restaurant) {
-        try{
-            sessionFactory.getCurrentSession().update(restaurant);
-            return  true;
-        }catch (Exception e){
+        try {
+            sessionFactory
+            .getCurrentSession()
+            .update(restaurant);
+
+            return true;
+
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
@@ -62,16 +67,18 @@ public class RestaurantDAOImpl implements RestaurantDAO {
         return sessionFactory.getCurrentSession().get(Restaurant.class, id);
     }
 
-    public void deactivate(int id) {
+    public int deactivate(int id) {
         Restaurant restaurant = getRestaurantById(id);
         restaurant.setActive(false);
         updateRestaurant(restaurant);
+        return id;
     }
 
-    public void activate(int id) {
+    public int activate(int id) {
         Restaurant restaurant = getRestaurantById(id);
         restaurant.setActive(true);
         updateRestaurant(restaurant);
+        return id;
     }
 
     public boolean getStatus(int id) {

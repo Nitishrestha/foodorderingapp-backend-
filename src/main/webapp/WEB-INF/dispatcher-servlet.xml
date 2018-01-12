@@ -11,12 +11,8 @@
    http://www.springframework.org/schema/mvc
    http://www.springframework.org/schema/mvc/spring-mvc.xsd
    ">
-    <bean id="viewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="prefix" value="/WEB-INF/views/"/>
-    <property name="suffix" value=".jsp"/>
-    </bean>
+
     <mvc:annotation-driven/>
-    <context:component-scan base-package="com.foodorderingapp"/>
+    <context:component-scan base-package="com.foodorderingapp" />
 
 </beans>

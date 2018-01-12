@@ -3,12 +3,22 @@ package com.foodorderingapp.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="tbl_order")
+@Table(name="tbl_orders")
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="order_id")
     private int orderId;
+    @Column(name="confirm")
+    private Boolean confirm;
+
+    public Boolean getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(Boolean confirm) {
+        this.confirm = confirm;
+    }
 
     @ManyToOne
     @JoinColumn(name="user_id")
