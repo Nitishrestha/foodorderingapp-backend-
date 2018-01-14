@@ -18,26 +18,26 @@ public class FoodDAOImpl implements FoodDAO {
     private final RestaurantDAO restaurantDAO;
 
     @Autowired
-    public FoodDAOImpl(SessionFactory sessionFactory, RestaurantDAO restaurantDAO){
+    public FoodDAOImpl(SessionFactory sessionFactory, RestaurantDAO restaurantDAO) {
         this.sessionFactory = sessionFactory;
         this.restaurantDAO = restaurantDAO;
     }
 
     public boolean deleteFood(Food food) {
-        try{
+        try {
             sessionFactory.getCurrentSession().delete(food);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
     }
 
     public boolean updateFood(Food food) {
-        try{
+        try {
             sessionFactory.getCurrentSession().update(food);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
@@ -61,34 +61,37 @@ public class FoodDAOImpl implements FoodDAO {
         System.out.println(restaurant);
         return sessionFactory
                 .getCurrentSession()
-                .createQuery(query,Food.class)
-                .setParameter("restaurant",restaurant)
+                .createQuery(query, Food.class)
+                .setParameter("restaurant", restaurant)
                 .getResultList();
     }
 
     public List<Food> addFoodsToRestaurant(List<Food> foodList) {
-        try{
-            for(Food food:foodList){
+        try {
+            for (Food food : foodList) {
                 food.getRestaurant().setId(food.getRestaurantId());
                 sessionFactory
-                .getCurrentSession()
-                .persist(food);
+                        .getCurrentSession()
+                        .persist(food);
             }
             sessionFactory.getCurrentSession().flush();
             return foodList;
 
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
     public Food getFoodByName(String foodName) {
-
-        return  sessionFactory
-                .getCurrentSession()
-                .createQuery("FROM Food where name=:foodName",Food.class)
-                .setParameter("foodName",foodName).
-                getSingleResult();
+        try {
+            return sessionFactory
+                    .getCurrentSession()
+                    .createQuery("FROM Food where name=:foodName", Food.class)
+                    .setParameter("foodName", foodName).
+                            getSingleResult();
+        } catch (Exception e) {
+            throw new RuntimeException("foodName is not in the list");
+        }
     }
 }

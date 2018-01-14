@@ -45,7 +45,8 @@ public class OrderDaoImpl implements OrderDAO{
 
         try(Connection con = DBConnection.getConnection()) {
 
-            String sql ="select tbl_orders.order_id , tbl_orders.user_id from tbl_orders where tbl_orders.confirm=false";
+            String sql ="select tbl_orders.order_id ,tbl_orders.ordered_date, tbl_orders.user_id " +
+                    "from tbl_orders where tbl_orders.confirm=false";
             PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             List<OrderListDto> orderListDtoList=new ArrayList<OrderListDto>();
@@ -56,7 +57,7 @@ public class OrderDaoImpl implements OrderDAO{
                 List<OrderDetail> orderDetailList=orderDetailDAO.getOrderDetailByOrderId(rs.getInt("order_id"));
                 orderListDto.setOrderId(rs.getInt("order_id"));
                 orderListDto.setUserId(rs.getInt("user_id"));
-
+                orderListDto.setOrderedDate(rs.getDate("ordered_date"));
                 for(OrderDetail orderDetail:orderDetailList){
                     FoodRes foodRes = new FoodRes();
                     foodRes.setFoodName(orderDetail.getFoodName());

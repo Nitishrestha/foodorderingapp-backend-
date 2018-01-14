@@ -8,7 +8,7 @@ import java.util.List;
 public class BillDto {
 
     private int balance;
-    private List<Food> foodList=new ArrayList<Food>();
+    private List<Food> foodList=null;
 
     public int getBalance() {
         return balance;

@@ -29,9 +29,4 @@ public class OrderDetailController {
     public List<OrderDetailDto> getOrderDetail() {
         return orderDetailService.getOrderDetails();
     }
-
-    @GetMapping(value="{userId}")
-    public List<OrderDetail> getOrderDetailByUserId(@PathVariable("userId") int userId){
-        return orderDetailService.getByUserId(userId);
-    }
 }

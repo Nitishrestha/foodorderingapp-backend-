@@ -61,12 +61,14 @@ public class OrdersServiceImpl implements OrdersService {
             orderDetail.setQuantity(foodQuantity.getQuantity());
             orderDetail.setFoodPrice(foodQuantity.getFoodPrice());
             Food food=foodDAO.getFoodByName(foodQuantity.getFoodName());
-            foodList.add(food);
+            if(foodQuantity.getFoodPrice()!=food.getPrice()){
+                throw new RuntimeException("food price is not in the list");
+            }
 
             if(foodQuantity.getQuantity()<=0){
                     throw new IllegalArgumentException("quantity should be greater than 0");
                 }
-
+            foodList.add(food);
             int amount=foodQuantity.getQuantity()*foodQuantity.getFoodPrice();
             balance=user.getBalance()-amount;
             user.setBalance(balance);

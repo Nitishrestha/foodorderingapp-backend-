@@ -12,7 +12,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/foods")
-@CrossOrigin
 public class FoodController {
 
     private final FoodService foodService;
@@ -38,7 +37,6 @@ public class FoodController {
     //EDIT FOOD FROM ID
     @PutMapping("/{id}")
     public String updateFood(@RequestBody Food food,@PathVariable int id){
-        System.out.println(food);
         foodService.updateFood(food, id);
         return "Food updated successfully!";
     }

@@ -24,9 +24,5 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public List<OrderDetailDto> getOrderDetails() {
       return  orderDetailDAO.getOrderDetail();
     }
-
-    public List<OrderDetail> getByUserId(int userId) {
-        return orderDetailDAO.getOrderDetailByOrderId(userId);
-    }
 }
 

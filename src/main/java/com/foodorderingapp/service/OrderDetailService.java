@@ -8,6 +8,4 @@ import java.util.List;
 public interface OrderDetailService {
 
     List<OrderDetailDto> getOrderDetails();
-    List<OrderDetail> getByUserId(int userId);
-
 }

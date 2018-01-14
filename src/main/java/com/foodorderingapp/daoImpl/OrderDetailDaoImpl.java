@@ -38,7 +38,8 @@ public class OrderDetailDaoImpl implements OrderDetailDAO {
 
         try(Connection con = DBConnection.getConnection()) {
             List<OrderDetailDto> orderDetailDtoList=new ArrayList<OrderDetailDto>();
-            String sql = " SELECT tbl_users.first_name,tbl_users.middle_name,tbl_users.last_name,tbl_order_detail.restaurant_name, tbl_order_detail.food_name ,tbl_order_detail.quantity " +
+            String sql = " SELECT tbl_users.first_name,tbl_users.middle_name,tbl_order_detail.food_price,tbl_users.last_name," +
+                    "tbl_order_detail.restaurant_name,tbl_orders.ordered_date, tbl_order_detail.food_name ,tbl_order_detail.quantity " +
                     "FROM ((tbl_order_detail INNER join tbl_orders " +
                     "ON tbl_orders.order_id = tbl_order_detail.order_id) INNER " +
                     "JOIN tbl_users on tbl_users.user_id = tbl_orders.user_id)";
@@ -51,7 +52,9 @@ public class OrderDetailDaoImpl implements OrderDetailDAO {
                 orderDetailDto.setLastName(rs.getString("last_name"));
                 orderDetailDto.setRestaurantName(rs.getString("restaurant_name"));
                 orderDetailDto.setFoodName(rs.getString("food_name"));
-                orderDetailDto.setQuantity(rs.getInt("quantity"));
+                orderDetailDto.setFoodPrice(rs.getDouble("food_price"));
+                orderDetailDto.setQuantity(rs.getDouble("quantity"));
+                orderDetailDto.setOrderedDate(rs.getDate("ordered_date"));
                 orderDetailDtoList.add(orderDetailDto);
             }
             return orderDetailDtoList;

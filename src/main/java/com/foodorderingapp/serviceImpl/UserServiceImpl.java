@@ -35,13 +35,10 @@ public class UserServiceImpl implements UserService {
         user.setUserRole("user");
 
         User user1 = userDAO.getUserByEmailId(user);
-
         if (user1 != null) {
-
             throw new IllegalArgumentException("plz rewite email");
 
         } else if (user1 == null) {
-
             userDAO.addUser(user);
         }
     }
@@ -57,9 +54,15 @@ public class UserServiceImpl implements UserService {
         user.setUserPassword(loginDto.getUserPassword());
         User user1=userDAO.getUserByEmail(user);
         LoginDto loginDto1=new LoginDto();
-        loginDto1.setEmail(user1.getEmail());
         loginDto1.setId(user1.getUserId());
         loginDto1.setFirstName(user1.getFirstName());
+        loginDto1.setMiddleName(user1.getMiddleName());
+        loginDto1.setLastName(user1.getLastName());
+        loginDto1.setContactNo(user1.getContactNo());
+        loginDto1.setEmail(user1.getEmail());
+        loginDto1.setAddress(user1.getAddress());
+        loginDto1.setUserRole(user1.getUserRole());
+        loginDto1.setBalance(user1.getBalance());
 
         if(user1==null){
             throw new IllegalArgumentException("user not exits");
