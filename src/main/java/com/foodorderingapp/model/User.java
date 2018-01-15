@@ -33,7 +33,7 @@ public class User {
     @Column(name="user_role")
     private String userRole;
     @Column(name="balance")
-    private int balance;
+    private double balance;
 
 
 
@@ -110,12 +110,11 @@ public class User {
         this.contactNo = contactNo;
     }
 
-
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 }

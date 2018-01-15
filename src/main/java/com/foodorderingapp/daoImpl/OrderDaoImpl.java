@@ -71,7 +71,6 @@ public class OrderDaoImpl implements OrderDAO{
             }
             return orderListDtoList;
         } catch (Exception e) {
-
             throw new RuntimeException("Cannot find Order List");
         }
     }

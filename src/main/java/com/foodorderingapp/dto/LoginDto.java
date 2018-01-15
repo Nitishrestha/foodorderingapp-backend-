@@ -13,7 +13,7 @@ public class LoginDto {
     private String contactNo;
     private String address;
     private String userRole;
-    private int balance;
+    private double balance;
 
     public String getMiddleName() {
         return middleName;
@@ -55,11 +55,11 @@ public class LoginDto {
         this.userRole = userRole;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

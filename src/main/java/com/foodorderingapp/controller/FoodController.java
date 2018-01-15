@@ -11,6 +11,7 @@ import java.util.List;
  * Created by TOPSHI KREATS on 11/29/2017.
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/foods")
 public class FoodController {
 

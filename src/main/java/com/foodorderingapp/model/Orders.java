@@ -12,6 +12,7 @@ public class Orders {
     @Column(name="confirm")
     private Boolean confirm;
 
+
     public Boolean getConfirm() {
         return confirm;
     }

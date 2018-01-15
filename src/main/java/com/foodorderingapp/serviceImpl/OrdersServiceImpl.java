@@ -35,7 +35,7 @@ public class OrdersServiceImpl implements OrdersService {
         this.orderDetailDAO=orderDetailDAO;
     }
 
-    int balance;
+    double balance;
     public BillDto add(OrderDto orderDto) {
 
         BillDto bal=new BillDto();
