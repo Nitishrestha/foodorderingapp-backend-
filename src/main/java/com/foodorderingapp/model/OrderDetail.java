@@ -1,5 +1,7 @@
 package com.foodorderingapp.model;
 
+import com.foodorderingapp.dto.OrderDetailDto;
+
 import javax.persistence.*;
 
 @Entity
@@ -18,7 +20,6 @@ public class OrderDetail {
     private String restaurantName;
     @Column(name="quantity")
     private int quantity;
-
 
     @ManyToOne
     @JoinColumn(name="order_id")

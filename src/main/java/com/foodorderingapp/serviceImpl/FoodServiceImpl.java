@@ -12,7 +12,6 @@ import java.util.List;
 @Service("foodService")
 public class FoodServiceImpl implements FoodService{
 
-
     private final FoodDAO foodDAO;
     private final RestaurantDAO restaurantDAO;
 

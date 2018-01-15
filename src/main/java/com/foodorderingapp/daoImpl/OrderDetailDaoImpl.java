@@ -5,6 +5,7 @@ import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dto.OrderDetailDto;
 import com.foodorderingapp.model.OrderDetail;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
