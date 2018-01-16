@@ -4,10 +4,7 @@ import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.dto.BillDto;
-import com.foodorderingapp.dto.FoodQuantity;
-import com.foodorderingapp.dto.OrderDto;
-import com.foodorderingapp.dto.OrderListDto;
+import com.foodorderingapp.dto.*;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.Orders;
@@ -81,7 +78,70 @@ public class OrdersServiceImpl implements OrdersService {
         }
 
     public List<OrderListDto> getOrder() {
-        return  orderDAO.getOrders();
+
+        try{
+            List<OrderListMapperDto> orderListMapperDtoList=orderDAO.getOrders();
+            List<OrderListDto> orderListDtoList=new ArrayList<OrderListDto>();
+
+            for(OrderListMapperDto orderListMapperDto:orderListMapperDtoList){
+                OrderListDto orderListDto=new OrderListDto();
+                List<FoodRes> foodResList=new ArrayList();
+                orderListDto.setOrderId(orderListMapperDto.getOrderId());
+                orderListDto.setUserId(orderListMapperDto.getUserId());
+                orderListDto.setOrderedDate(orderListMapperDto.getOrderedDate());
+                List<OrderDetail> orderDetailList=orderDetailDAO.getOrderDetailByOrderId(orderListMapperDto.getOrderId());
+
+                for(OrderDetail orderDetail:orderDetailList){
+                    FoodRes foodRes = new FoodRes();
+                    foodRes.setFoodName(orderDetail.getFoodName());
+                    foodRes.setFoodPrice(orderDetail.getFoodPrice());
+                    foodRes.setQuantity(orderDetail.getQuantity());
+                    foodRes.setRestaurantName(orderDetail.getRestaurantName());
+                    foodResList.add(foodRes);
+                    orderListDto.setFoodResList(foodResList);
+                }
+                orderListDtoList.add(orderListDto);
+            }
+            return  orderListDtoList;
+        }catch(RuntimeException e){
+            throw new RuntimeException("Cannot find order");
+        }
+    }
+    public List<UserListDto> getByUserId(int userId) {
+
+        try {
+            List<UserListMapperDto> userListMapperDtos = userDAO.getByUserId(userId);
+            List<UserListDto> userListDtoList = new ArrayList<>();
+
+            for (UserListMapperDto userListMapperDto : userListMapperDtos) {
+
+                UserListDto userListDto = new UserListDto();
+                List<FoodRes> foodResList = new ArrayList<>();
+                userListDto.setUserId(userListMapperDto.getUserId());
+                userListDto.setOrderId(userListMapperDto.getOrderId());
+                userListDto.setFirstName(userListMapperDto.getFirstName());
+                userListDto.setMiddleName(userListMapperDto.getMiddleName());
+                userListDto.setLastName(userListMapperDto.getLastName());
+                userListDto.setOrderedDate(userListMapperDto.getOrderedDate());
+                List<OrderDetail> orderDetailList = orderDetailDAO.getOrderDetailByOrderId(userListMapperDto.getOrderId());
+
+                for (OrderDetail orderDetail : orderDetailList) {
+                    FoodRes foodRes = new FoodRes();
+                    foodRes.setRestaurantName(orderDetail.getRestaurantName());
+                    foodRes.setQuantity(orderDetail.getQuantity());
+                    foodRes.setFoodPrice(orderDetail.getFoodPrice());
+                    foodRes.setFoodName(orderDetail.getFoodName());
+                    foodResList.add(foodRes);
+                    userListDto.setFoodResList(foodResList);
+                }
+                userListDtoList.add(userListDto);
+            }
+            return userListDtoList;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("cannot find user list");
+        }
+
     }
 
     public void update(int orderId) {

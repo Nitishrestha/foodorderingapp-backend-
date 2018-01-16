@@ -16,6 +16,4 @@ public interface UserService {
     LoginDto verifyUser(LoginDto loginDto);
     User getUser(int userId);
     void update(User user,int userId);
-    List<UserListDto> getByUserId(int userId);
-
 }

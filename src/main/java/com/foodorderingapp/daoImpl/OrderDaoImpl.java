@@ -5,9 +5,12 @@ import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dto.FoodRes;
 import com.foodorderingapp.dto.OrderListDto;
+import com.foodorderingapp.dto.OrderListMapperDto;
+import com.foodorderingapp.dto.UserListMapperDto;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.Orders;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,40 +44,13 @@ public class OrderDaoImpl implements OrderDAO{
         }
     }
 
-    public List<OrderListDto> getOrders() {
-
-        try(Connection con = DBConnection.getConnection()) {
-
-            String sql ="select tbl_orders.order_id ,tbl_orders.ordered_date, tbl_orders.user_id " +
-                    "from tbl_orders where tbl_orders.confirm=false";
-            PreparedStatement pst = con.prepareStatement(sql);
-            ResultSet rs = pst.executeQuery();
-            List<OrderListDto> orderListDtoList=new ArrayList<OrderListDto>();
-            while(rs.next()) {
-
-                OrderListDto orderListDto=new OrderListDto();
-                List<FoodRes> foodResList=new ArrayList<FoodRes>();
-                List<OrderDetail> orderDetailList=orderDetailDAO.getOrderDetailByOrderId(rs.getInt("order_id"));
-                orderListDto.setOrderId(rs.getInt("order_id"));
-                orderListDto.setUserId(rs.getInt("user_id"));
-                orderListDto.setOrderedDate(rs.getDate("ordered_date"));
-                for(OrderDetail orderDetail:orderDetailList){
-                    FoodRes foodRes = new FoodRes();
-                    foodRes.setFoodName(orderDetail.getFoodName());
-                    foodRes.setFoodPrice(orderDetail.getFoodPrice());
-                    foodRes.setQuantity(orderDetail.getQuantity());
-                    foodRes.setRestaurantName(orderDetail.getRestaurantName());
-                    foodResList.add(foodRes);
-                    orderListDto.setFoodResList(foodResList);
-                }
-                orderListDtoList.add(orderListDto);
-            }
-            return orderListDtoList;
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot find Order List");
-        }
+    public List<OrderListMapperDto> getOrders() {
+        Query qry=sessionFactory
+                .getCurrentSession()
+                .createNativeQuery("select tbl_orders.order_id ,tbl_orders.ordered_date, tbl_orders.user_id " +
+                "from tbl_orders where tbl_orders.confirm=false","OrderMapping");
+        return qry.getResultList();
     }
-
     public void update(Orders orders) {
         sessionFactory.getCurrentSession().update(orders);
     }
@@ -82,6 +58,7 @@ public class OrderDaoImpl implements OrderDAO{
     public Orders getOrder(int orderId) {
         return  sessionFactory.getCurrentSession().get(Orders.class,orderId);
     }
+
 
     /*public List<Orders> getOrderByUser(int userId) {
         return sessionFactory.getCurrentSession().

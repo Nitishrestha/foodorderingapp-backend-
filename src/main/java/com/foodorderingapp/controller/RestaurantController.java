@@ -1,5 +1,6 @@
 package com.foodorderingapp.controller;
 
+import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.FoodService;
@@ -10,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
-@RequestMapping(value = "/restaurants")
+@RequestMapping(WebUrlConstant.Restaurant.RESTAURANT_API)
 public class RestaurantController {
 
     private static RestaurantService restaurantService;

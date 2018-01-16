@@ -1,6 +1,7 @@
 package com.foodorderingapp.controller;
 
 
+import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.dto.OrderDetailDto;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.service.OrderDetailService;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/orderDetail")
+@RequestMapping(WebUrlConstant.OrderDetail.ORDER_DETAIL_API)
 public class OrderDetailController {
 
     private final OrderDetailService orderDetailService;

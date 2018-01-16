@@ -1,29 +1,35 @@
 package com.foodorderingapp.serviceImpl;
 
+import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.dto.LoginDto;
-import com.foodorderingapp.dto.UserDto;
-import com.foodorderingapp.dto.UserListDto;
+import com.foodorderingapp.dto.*;
+import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
+    private final OrderDetailDAO orderDetailDAO;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO){
-        this.userDAO=userDAO;
+    public UserServiceImpl(UserDAO userDAO, OrderDetailDAO orderDetailDAO) {
+        this.userDAO = userDAO;
+        this.orderDetailDAO = orderDetailDAO;
     }
 
     public void addUser(UserDto userDto) {
 
-        User user=new User();
+        User user = new User();
         user.setFirstName(userDto.getFirstName());
         user.setMiddleName(userDto.getMiddleName());
         user.setLastName(userDto.getLastName());
@@ -49,11 +55,11 @@ public class UserServiceImpl implements UserService {
 
     public LoginDto verifyUser(LoginDto loginDto) {
 
-        User user=new User();
+        User user = new User();
         user.setEmail(loginDto.getEmail());
         user.setUserPassword(loginDto.getUserPassword());
-        User user1=userDAO.getUserByEmail(user);
-        LoginDto loginDto1=new LoginDto();
+        User user1 = userDAO.getUserByEmail(user);
+        LoginDto loginDto1 = new LoginDto();
         loginDto1.setId(user1.getUserId());
         loginDto1.setFirstName(user1.getFirstName());
         loginDto1.setMiddleName(user1.getMiddleName());
@@ -64,10 +70,9 @@ public class UserServiceImpl implements UserService {
         loginDto1.setUserRole(user1.getUserRole());
         loginDto1.setBalance(user1.getBalance());
 
-        if(user1==null){
+        if (user1 == null) {
             throw new IllegalArgumentException("user not exits");
-        }
-        else{
+        } else {
             return loginDto1;
         }
     }
@@ -77,12 +82,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public void update(User user, int userId) {
-        User user1=userDAO.getUser(userId);
+        User user1 = userDAO.getUser(userId);
         user1.setBalance(user.getBalance());
         userDAO.update(user1);
-    }
-
-    public List<UserListDto> getByUserId(int userId) {
-        return userDAO.getByUserId(userId);
     }
 }

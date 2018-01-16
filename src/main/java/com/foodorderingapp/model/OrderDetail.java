@@ -3,9 +3,25 @@ package com.foodorderingapp.model;
 import com.foodorderingapp.dto.OrderDetailDto;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="tbl_order_detail")
+@SqlResultSetMapping(
+        name="OrderDetailMapping",
+        classes =
+                {@ConstructorResult(targetClass = OrderDetailDto.class,
+                        columns = {
+                @ColumnResult(name="order_id", type=Integer.class),
+                @ColumnResult(name="first_name",type=String.class),
+                @ColumnResult(name="middle_name",type=String.class),
+                @ColumnResult(name="last_name" ,type=String.class),
+                @ColumnResult(name="food_name" ,type=String.class),
+                @ColumnResult(name="food_price",type=Double.class ),
+                @ColumnResult(name="restaurant_name" ,type=String.class),
+                @ColumnResult(name="quantity",type=Integer.class),
+                @ColumnResult(name="ordered_date",type=Date.class)
+                        })})
 public class OrderDetail {
 
     @Id

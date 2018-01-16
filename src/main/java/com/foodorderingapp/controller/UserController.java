@@ -1,5 +1,6 @@
 package com.foodorderingapp.controller;
 
+import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.dto.LoginDto;
 import com.foodorderingapp.dto.UserDto;
 import com.foodorderingapp.dto.UserListDto;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/user")
+@RequestMapping(WebUrlConstant.User.USER_API)
 public class UserController {
 
     private final UserService userService;
@@ -42,8 +42,5 @@ public class UserController {
         return userService.getUser(userId);
     }
 
-    @GetMapping(value = "/userList/{userId}")
-    public List<UserListDto> getByUserId(@PathVariable("userId") int userId) {
-        return userService.getByUserId(userId);
-    }
+
 }

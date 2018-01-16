@@ -1,16 +1,30 @@
 package com.foodorderingapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.foodorderingapp.dto.UserListDto;
+import com.foodorderingapp.dto.UserListMapperDto;
 import com.sun.istack.internal.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="tbl_users")
+@SqlResultSetMapping(
+        name="UserMapping",
+        classes =
+                {@ConstructorResult(targetClass = UserListMapperDto.class,
+                        columns = {
+                                @ColumnResult(name="order_id", type=Integer.class),
+                                @ColumnResult(name="user_id", type=Integer.class),
+                                @ColumnResult(name="first_name",type=String.class),
+                                @ColumnResult(name="middle_name",type=String.class),
+                                @ColumnResult(name="last_name" ,type=String.class),
+                                @ColumnResult(name="ordered_date",type=Date.class),
+                        })})
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
