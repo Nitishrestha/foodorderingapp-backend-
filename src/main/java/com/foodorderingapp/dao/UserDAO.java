@@ -11,8 +11,8 @@ public interface UserDAO {
      Boolean addUser(User user);
      List<User> getUsers();
      User getUser(int userId);
-    User getUserByEmail(User user);
+    User getUserByEmail(String userPassword,String email);
+    List<UserListMapperDto> getByUserId(int userId);
     User getUserByEmailId(User user);
     void update(User user);
-    List<UserListMapperDto> getByUserId(int userId);
 }

@@ -1,23 +1,15 @@
 package com.foodorderingapp.daoImpl;
 
-import com.foodorderingapp.config.DBConnection;
 import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
-import com.foodorderingapp.dto.FoodRes;
-import com.foodorderingapp.dto.OrderListDto;
 import com.foodorderingapp.dto.OrderListMapperDto;
-import com.foodorderingapp.dto.UserListMapperDto;
-import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.Orders;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Repository("orderDAO")

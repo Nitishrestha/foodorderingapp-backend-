@@ -5,6 +5,7 @@ import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.*;
+import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.Orders;
@@ -39,9 +40,8 @@ public class OrdersServiceImpl implements OrdersService {
         List<Food> foodList=new ArrayList<Food>();
         User user=userDAO.getUser(orderDto.getUserId());
         if(user == null){
-            throw new RuntimeException("User not found.");
+            throw new NotFoundException("user not found.");
         }
-
         Orders orders = new Orders();
         orders.setUser(user);
         orders.setConfirm(false);
@@ -59,12 +59,12 @@ public class OrdersServiceImpl implements OrdersService {
             orderDetail.setFoodPrice(foodQuantity.getFoodPrice());
             Food food=foodDAO.getFoodByName(foodQuantity.getFoodName());
             if(foodQuantity.getFoodPrice()!=food.getPrice()){
-                throw new RuntimeException("food price is not in the list");
+                throw new NotFoundException("price not found");
             }
 
             if(foodQuantity.getQuantity()<=0){
-                    throw new IllegalArgumentException("quantity should be greater than 0");
-                }
+                throw new NotFoundException(" quantity should be greater than 0");
+            }
             foodList.add(food);
             int amount=foodQuantity.getQuantity()*foodQuantity.getFoodPrice();
             balance=user.getBalance()-amount;
@@ -104,7 +104,7 @@ public class OrdersServiceImpl implements OrdersService {
             }
             return  orderListDtoList;
         }catch(RuntimeException e){
-            throw new RuntimeException("Cannot find order");
+            throw new NotFoundException("Cannot find order list");
         }
     }
     public List<UserListDto> getByUserId(int userId) {
@@ -139,9 +139,8 @@ public class OrdersServiceImpl implements OrdersService {
             return userListDtoList;
         }
         catch (Exception e) {
-            throw new RuntimeException("cannot find user list");
+            throw new NotFoundException("Cannot find order list");
         }
-
     }
 
     public void update(int orderId) {

@@ -3,6 +3,7 @@ package com.foodorderingapp.daoImpl;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.UserListMapperDto;
+import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository("userDAO")
 @Transactional
@@ -31,9 +31,7 @@ public class UserDaoImpl implements UserDAO {
             sessionFactory.getCurrentSession().persist(user);
             return true;
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
             return false;
-
         }
     }
 
@@ -45,18 +43,17 @@ public class UserDaoImpl implements UserDAO {
         return sessionFactory.getCurrentSession().get(User.class, userId);
     }
 
-    public User getUserByEmail(User user) {
+    public User getUserByEmail(String userPassword,String email) {
 
         try {
             User user1 = sessionFactory
                     .getCurrentSession()
                     .createQuery("FROM User WHERE email=:email AND userPassword=:userPassword", User.class)
-                    .setParameter("email", user.getEmail())
-                    .setParameter("userPassword", user.getUserPassword()).getSingleResult();
+                    .setParameter("email", email)
+                    .setParameter("userPassword", userPassword).getSingleResult();
             return user1;
-
         } catch (Exception ex) {
-            throw new RuntimeException("User not found");
+            throw new NotFoundException("user not found");
         }
     }
 
@@ -90,7 +87,5 @@ public class UserDaoImpl implements UserDAO {
                 .setParameter(1, userId);
         return qry.getResultList();
     }
-
-
 }
 

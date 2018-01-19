@@ -3,6 +3,7 @@ package com.foodorderingapp.serviceImpl;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.*;
+import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
@@ -39,10 +40,9 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
         user.setBalance(1200);
         user.setUserRole("user");
-
         User user1 = userDAO.getUserByEmailId(user);
         if (user1 != null) {
-            throw new IllegalArgumentException("plz rewite email");
+            throw new NotFoundException("plz rewite email");
 
         } else if (user1 == null) {
             userDAO.addUser(user);
@@ -53,12 +53,9 @@ public class UserServiceImpl implements UserService {
         return userDAO.getUsers();
     }
 
-    public LoginDto verifyUser(LoginDto loginDto) {
+    public LoginDto verifyUser(String userPassword,String email) {
 
-        User user = new User();
-        user.setEmail(loginDto.getEmail());
-        user.setUserPassword(loginDto.getUserPassword());
-        User user1 = userDAO.getUserByEmail(user);
+        User user1 = userDAO.getUserByEmail(userPassword,email);
         LoginDto loginDto1 = new LoginDto();
         loginDto1.setId(user1.getUserId());
         loginDto1.setFirstName(user1.getFirstName());
@@ -71,7 +68,7 @@ public class UserServiceImpl implements UserService {
         loginDto1.setBalance(user1.getBalance());
 
         if (user1 == null) {
-            throw new IllegalArgumentException("user not exits");
+            throw new NotFoundException("user not exits");
         } else {
             return loginDto1;
         }
