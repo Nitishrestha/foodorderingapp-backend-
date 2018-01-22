@@ -13,4 +13,5 @@ public interface RestaurantService {
     int deactivate(int id);
     int activate(int id);
     boolean getStatus(int id);
+    Restaurant getRestaurantByName(String restaurantName);
 }

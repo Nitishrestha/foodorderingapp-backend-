@@ -8,10 +8,12 @@ import com.foodorderingapp.model.Orders;
 import com.foodorderingapp.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service("orderDetailService")
+@Transactional
 public class OrderDetailServiceImpl implements OrderDetailService {
 
     private final OrderDetailDAO orderDetailDAO;

@@ -6,9 +6,12 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -16,28 +19,30 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan(basePackages = { "com.foodorderingapp" })
 @EnableTransactionManagement
-public class
-HibernateConfig {
-    private final static String DATABASE_URL = "jdbc:mysql://localhost:3306/foodorderingappdb";
-    private final static String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
-    private final static String DATABASE_DIALECT = "org.hibernate.dialect.MySQLDialect";
-    private final static String DATABASE_USERNAME = "root";
-    private final static String DATABASE_PASSWORD = "";
+@PropertySource(value={"classpath:application.properties"})
+public class HibernateConfig {
+
+    private final Environment environment;
+
+    @Autowired
+    public HibernateConfig(Environment environment){
+        this.environment=environment;
+    }
 
     @Bean
     public DataSource getDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
 
-        dataSource.setDriverClassName(DATABASE_DRIVER);
-        dataSource.setUrl(DATABASE_URL);
-        dataSource.setUsername(DATABASE_USERNAME);
-        dataSource.setPassword(DATABASE_PASSWORD);
+        dataSource.setDriverClassName(environment.getRequiredProperty("spring.datasource.driver"));
+        dataSource.setUrl(environment.getRequiredProperty("spring.datasource.url"));
+        dataSource.setUsername(environment.getRequiredProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getRequiredProperty("spring.datasource.password"));
         System.out.println(dataSource);
         return dataSource;
     }
 
     @Bean
-    public SessionFactory getSessionfactory(DataSource dataSource) {
+    public SessionFactory getSessionFactory(DataSource dataSource) {
         LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource);
         builder.addProperties(getHibernateProperties());
         builder.scanPackages("com.foodorderingapp");
@@ -49,8 +54,8 @@ HibernateConfig {
 
         Properties properties = new Properties();
 
-        properties.put("hibernate.dialect", DATABASE_DIALECT);
-        properties.put("hibernate.enable_lazy_load_no_trans","true");
+        properties.put("hibernate.dialect",environment.getRequiredProperty("spring.datasource.dialect"));
+        properties.put("hibernate.enable_lazy_load_no_trans",environment.getRequiredProperty("hibernate.enable_lazy_load_no_trans"));
         return properties;
     }
 

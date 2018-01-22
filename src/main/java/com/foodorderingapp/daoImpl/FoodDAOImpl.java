@@ -2,16 +2,16 @@ package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
+import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.Restaurant;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Repository("foodDAO")
-@Transactional
 public class FoodDAOImpl implements FoodDAO {
 
     private final SessionFactory sessionFactory;
@@ -28,9 +28,8 @@ public class FoodDAOImpl implements FoodDAO {
             sessionFactory.getCurrentSession().delete(food);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new NotFoundException("cannot delete food");
         }
-        return false;
     }
 
     public boolean updateFood(Food food) {
@@ -38,9 +37,8 @@ public class FoodDAOImpl implements FoodDAO {
             sessionFactory.getCurrentSession().update(food);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new NotFoundException("cannot update food");
         }
-        return false;
     }
 
     public List<Food> getAll() {
@@ -78,20 +76,20 @@ public class FoodDAOImpl implements FoodDAO {
             return foodList;
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new NotFoundException("cannot add food to restaurant");
         }
-        return null;
     }
 
-    public Food getFoodByName(String foodName) {
+    public Food getFoodByResName(String restaurantName ,String foodName) {
         try {
             return sessionFactory
                     .getCurrentSession()
-                    .createQuery("FROM Food where name=:foodName", Food.class)
-                    .setParameter("foodName", foodName).
-                            getSingleResult();
+                    .createQuery("FROM Food where restaurant.name=:restaurantName and name=:foodName", Food.class)
+                    .setParameter("restaurantName", restaurantName)
+                    .setParameter("foodName",foodName)
+                    .getSingleResult();
         } catch (Exception e) {
-            throw new RuntimeException("foodName is not in the list");
+            throw new NotFoundException("foodName or restaurant is not in the list");
         }
     }
 }

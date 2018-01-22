@@ -14,6 +14,6 @@ public interface FoodService {
     Food getFoodById(int id);
     List<Food> getFoodByRestaurantId(int id);
     List<Food> addFoodsToRestaurant(List<Food> foodList);
-    Food getFoodByName(String foodName);
+//    Food getFoodByName(String foodName);
 
 }

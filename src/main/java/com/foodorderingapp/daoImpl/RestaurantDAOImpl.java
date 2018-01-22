@@ -1,17 +1,16 @@
 package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.RestaurantDAO;
+import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.Restaurant;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 @Repository("restaurantDAO")
-@Transactional
 public class RestaurantDAOImpl implements RestaurantDAO {
 
     private final SessionFactory sessionFactory;
@@ -26,9 +25,8 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory.getCurrentSession().delete(restaurant);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new NotFoundException("restaurant doesnot exits");
         }
-        return false;
     }
 
     public Restaurant addRestaurant(Restaurant restaurant) {
@@ -37,9 +35,8 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory.getCurrentSession().flush();
             return restaurant;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new NotFoundException("cannot add restaurant");
         }
-        return null;
     }
 
     public boolean updateRestaurant(Restaurant restaurant) {
@@ -47,13 +44,10 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory
             .getCurrentSession()
             .update(restaurant);
-
             return true;
-
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new NotFoundException("cannot update restaurant");
         }
-        return false;
     }
 
     public List<Restaurant> getAll() {
@@ -89,5 +83,14 @@ public class RestaurantDAOImpl implements RestaurantDAO {
                         .setParameter("id", id)
                         .getSingleResult();
         return restaurant.isActive();
+    }
+
+    @Override
+    public Restaurant getRestaurantByName(String restaurantName) {
+        return  sessionFactory
+                        .getCurrentSession()
+                        .createQuery("FROM Restaurant where name= :restaurantName", Restaurant.class)
+                        .setParameter("restaurantName", restaurantName)
+                        .getSingleResult();
     }
 }

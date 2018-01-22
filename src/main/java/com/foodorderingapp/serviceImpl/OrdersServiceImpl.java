@@ -1,43 +1,42 @@
 package com.foodorderingapp.serviceImpl;
 
-import com.foodorderingapp.dao.FoodDAO;
-import com.foodorderingapp.dao.OrderDAO;
-import com.foodorderingapp.dao.OrderDetailDAO;
-import com.foodorderingapp.dao.UserDAO;
+import com.foodorderingapp.dao.*;
 import com.foodorderingapp.dto.*;
 import com.foodorderingapp.exception.NotFoundException;
-import com.foodorderingapp.model.Food;
-import com.foodorderingapp.model.OrderDetail;
-import com.foodorderingapp.model.Orders;
-import com.foodorderingapp.model.User;
+import com.foodorderingapp.model.*;
+import com.foodorderingapp.reuse.Reuse;
 import com.foodorderingapp.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service("orderService")
+@Transactional
 public class OrdersServiceImpl implements OrdersService {
 
     private final UserDAO userDAO;
     private final FoodDAO foodDAO;
     private final OrderDAO orderDAO;
+    private final RestaurantDAO restaurantDAO;
     private final OrderDetailDAO orderDetailDAO;
 
     @Autowired
-    public OrdersServiceImpl(UserDAO userDAO,FoodDAO foodDAO,OrderDAO orderDAO,OrderDetailDAO orderDetailDAO){
+    public OrdersServiceImpl(UserDAO userDAO,FoodDAO foodDAO,OrderDAO orderDAO,OrderDetailDAO orderDetailDAO,RestaurantDAO restaurantDAO){
         this.userDAO=userDAO;
         this.foodDAO=foodDAO;
         this.orderDAO=orderDAO;
         this.orderDetailDAO=orderDetailDAO;
+        this.restaurantDAO=restaurantDAO;
     }
 
     double balance;
     public BillDto add(OrderDto orderDto) {
 
         BillDto bal=new BillDto();
-        List<Food> foodList=new ArrayList<Food>();
+        List<Food> foodList=new ArrayList<>();
         User user=userDAO.getUser(orderDto.getUserId());
         if(user == null){
             throw new NotFoundException("user not found.");
@@ -57,7 +56,7 @@ public class OrdersServiceImpl implements OrdersService {
             orderDetail.setRestaurantName(foodQuantity.getRestaurantName());
             orderDetail.setQuantity(foodQuantity.getQuantity());
             orderDetail.setFoodPrice(foodQuantity.getFoodPrice());
-            Food food=foodDAO.getFoodByName(foodQuantity.getFoodName());
+            Food food=foodDAO.getFoodByResName(foodQuantity.getRestaurantName(),foodQuantity.getFoodName());
             if(foodQuantity.getFoodPrice()!=food.getPrice()){
                 throw new NotFoundException("price not found");
             }
@@ -92,12 +91,7 @@ public class OrdersServiceImpl implements OrdersService {
                 List<OrderDetail> orderDetailList=orderDetailDAO.getOrderDetailByOrderId(orderListMapperDto.getOrderId());
 
                 for(OrderDetail orderDetail:orderDetailList){
-                    FoodRes foodRes = new FoodRes();
-                    foodRes.setFoodName(orderDetail.getFoodName());
-                    foodRes.setFoodPrice(orderDetail.getFoodPrice());
-                    foodRes.setQuantity(orderDetail.getQuantity());
-                    foodRes.setRestaurantName(orderDetail.getRestaurantName());
-                    foodResList.add(foodRes);
+                    foodResList.add(Reuse.addFoodRes(orderDetail));
                     orderListDto.setFoodResList(foodResList);
                 }
                 orderListDtoList.add(orderListDto);
@@ -126,12 +120,7 @@ public class OrdersServiceImpl implements OrdersService {
                 List<OrderDetail> orderDetailList = orderDetailDAO.getOrderDetailByOrderId(userListMapperDto.getOrderId());
 
                 for (OrderDetail orderDetail : orderDetailList) {
-                    FoodRes foodRes = new FoodRes();
-                    foodRes.setRestaurantName(orderDetail.getRestaurantName());
-                    foodRes.setQuantity(orderDetail.getQuantity());
-                    foodRes.setFoodPrice(orderDetail.getFoodPrice());
-                    foodRes.setFoodName(orderDetail.getFoodName());
-                    foodResList.add(foodRes);
+                    foodResList.add(Reuse.addFoodRes(orderDetail));
                     userListDto.setFoodResList(foodResList);
                 }
                 userListDtoList.add(userListDto);

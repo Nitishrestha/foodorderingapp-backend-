@@ -6,10 +6,12 @@ import com.foodorderingapp.model.Food;
 import com.foodorderingapp.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service("foodService")
+@Transactional
 public class FoodServiceImpl implements FoodService{
 
     private final FoodDAO foodDAO;
@@ -48,7 +50,7 @@ public class FoodServiceImpl implements FoodService{
         return foodDAO.addFoodsToRestaurant(foodList);
     }
 
-    public Food getFoodByName(String foodName) {
+   /* public Food getFoodByName(String foodName) {
         return foodDAO.getFoodByName(foodName);
-    }
+    }*/
 }

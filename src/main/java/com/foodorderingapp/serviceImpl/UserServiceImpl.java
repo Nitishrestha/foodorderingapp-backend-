@@ -9,6 +9,7 @@ import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service("userService")
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;

@@ -14,5 +14,5 @@ public interface FoodDAO {
     Food getFoodById(int id);
     List<Food> getFoodByRestaurantId(int id);
     List<Food> addFoodsToRestaurant(List<Food> foodList);
-    Food getFoodByName(String foodName);
+    Food getFoodByResName(String restaurantName,String foodName);
 }

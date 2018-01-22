@@ -5,6 +5,7 @@ import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  */
 
 @Service("restaurantService")
+@Transactional
 public class RestaurantServiceImpl implements RestaurantService {
 
 
@@ -65,5 +67,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public boolean getStatus(int id) {
         return restaurantDAO.getStatus(id);
+    }
+
+    @Override
+    public Restaurant getRestaurantByName(String restaurantName) {
+        return restaurantDAO.getRestaurantByName(restaurantName);
     }
 }
