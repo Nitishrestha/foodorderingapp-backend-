@@ -24,10 +24,10 @@ public class UserDaoImpl implements UserDAO {
         this.orderDetailDAO = orderDetailDAO;
     }
 
-    public Boolean addUser(User user) {
+    public User addUser(User user) {
         try {
             sessionFactory.getCurrentSession().persist(user);
-            return true;
+            return user;
         } catch (Exception ex) {
             throw new NotFoundException("cannot add user");
         }

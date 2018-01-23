@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Service("userService")
+@Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
@@ -30,7 +30,9 @@ public class UserServiceImpl implements UserService {
         this.orderDetailDAO = orderDetailDAO;
     }
 
-    public void addUser(UserDto userDto) {
+
+    public User addUser(UserDto userDto) {
+
 
         User user = new User();
         user.setFirstName(userDto.getFirstName());
@@ -49,6 +51,7 @@ public class UserServiceImpl implements UserService {
         } else if (user1 == null) {
             userDAO.addUser(user);
         }
+        return user;
     }
 
     public List<User> getUsers() {

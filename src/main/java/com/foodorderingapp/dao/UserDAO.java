@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserDAO {
-     Boolean addUser(User user);
+     User addUser(User user);
      List<User> getUsers();
      User getUser(int userId);
     User getUserByEmail(String userPassword,String email);

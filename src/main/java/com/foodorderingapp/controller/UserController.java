@@ -36,9 +36,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/verify")
-    public ResponseEntity<String> verifyUser(@RequestBody  LoginDto loginDto) {
-        userService.verifyUser(loginDto.getUserPassword(),loginDto.getEmail());
-        return  new ResponseEntity<String>("user verified", HttpStatus.OK);
+    public LoginDto verifyUser(@RequestBody  LoginDto loginDto) {
+       LoginDto loginDto1= userService.verifyUser(loginDto.getUserPassword(),loginDto.getEmail());
+        return loginDto1;
     }
 
     @GetMapping(value = "/{userId}")

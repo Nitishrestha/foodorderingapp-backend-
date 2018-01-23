@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserService {
 
-    void addUser(UserDto userDto);
+    User addUser(UserDto userDto);
     List<User> getUsers();
     LoginDto verifyUser(String userPassword,String email);
     User getUser(int userId);

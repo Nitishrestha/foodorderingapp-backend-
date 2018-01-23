@@ -2,8 +2,11 @@ package com.foodorderingapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.foodorderingapp.model.Food;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +26,18 @@ public class Restaurant implements Serializable {
     private int id;
 
     @Column(name = "restaurant_name")
+    @NotNull(message = "please enter the restaurant name")
+    @Size(min=3,max=25)
     private String name;
 
     @Column(name = "restaurant_address")
+    @NotBlank(message = "please enter the restaurant address")
+    @Size(min=3,max=25)
     private String address;
 
     @Column(name = "restaurant_contact")
+    @NotBlank(message = "please enter the restaurant contact")
+    @Size(min=10,max=15)
     private String contact ;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

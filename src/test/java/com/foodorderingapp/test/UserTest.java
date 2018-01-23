@@ -1,62 +1,61 @@
+
 package com.foodorderingapp.test;
 
+import com.foodorderingapp.Application;
 import com.foodorderingapp.dao.UserDAO;
+import com.foodorderingapp.dto.UserDto;
+import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.User;
+import com.foodorderingapp.service.UserService;
+import com.foodorderingapp.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-
+import static org.mockito.Mockito.when;
+//@SpringBootTest
+//@RunWith(SpringRunner.class)
 public class UserTest {
 
+    @Mock
+    private UserDAO userDAO;
 
-    private static AnnotationConfigApplicationContext context;
+    @InjectMocks
+    UserServiceImpl userService;
 
-    private static UserDAO userDAO;
+          @Before
+              public void setUp() throws Exception {
+            MockitoAnnotations.initMocks(this);
+      }
 
-    private User user;
 
-    @BeforeClass
-    public static void init() {
+         @Test (expected = NotFoundException.class)
+   public void testAdd(){
 
-        context = new AnnotationConfigApplicationContext();
-        context.scan("com.foodorderingapp");
-        context.refresh();
-
-        userDAO = (UserDAO) context.getBean("userDAO");
-
-    }
-
-    @Test
-    public void testAddOrder() {
-
-        user = new User();
-
-        user.setFirstName("laxman");
+        User user=new User();
+        user.setFirstName("hari");
         user.setMiddleName("bahadur");
-        user.setLastName("pant");
-        user.setUserPassword("ram");
-        user.setEmail("gl");
-        user.setAddress("bkt");
-        user.setContactNo("914891841");
-        user.setBalance(5000);
-        user.setUserRole("user");
+        user.setLastName("rai");
+        user.setUserPassword("hari");
+        user.setEmail("hari1@yahoo.com");
+        user.setAddress("ktm");
+        user.setContactNo("981615475");
 
-        User user1 = userDAO.getUserByEmailId(user);
-        if (user1 == null) {
-            Assert.assertEquals("Fail to add on User", true, userDAO.addUser(user));
-
-        } else if (user1 != null) {
-            throw new IllegalArgumentException("plz rewite email");
-        }
+        UserDto dto=new UserDto();
+        dto.setEmail("hari1@yahoo.com");
+        System.out.println(dto);
+        System.out.println(userDAO);
+        when(userDAO.getUserByEmailId(user)).thenReturn(new User());
+        when(userDAO.addUser(user)).thenReturn(user);
+        userService.addUser(dto);
+        /*System.out.println("user service"+userService);*/
+        /*Assert.assertNotNull(userService.addUser(dto).getUserId());*/
     }
-
-    @Test
-    public void testGetUser(){
-
-        Assert.assertEquals("Fail to get on User",5,userDAO.getUsers());
-    }
-
-
 }
