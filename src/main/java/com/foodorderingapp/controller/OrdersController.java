@@ -5,6 +5,7 @@ import com.foodorderingapp.dto.BillDto;
 import com.foodorderingapp.dto.OrderDto;
 import com.foodorderingapp.dto.OrderListDto;
 import com.foodorderingapp.dto.UserListDto;
+import com.foodorderingapp.model.Orders;
 import com.foodorderingapp.service.OrderDetailService;
 import com.foodorderingapp.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,8 @@ public class OrdersController {
     }
 
     @PutMapping("/{orderId}")
-    public String update(@PathVariable int orderId){
-        ordersService.update(orderId);
-        return "Order updated successfully!";
+    public Orders update(@PathVariable int orderId){
+       return ordersService.update(orderId);
     }
 
     @GetMapping(value = "/orderList/{userId}")

@@ -2,6 +2,7 @@ package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
+import com.foodorderingapp.exception.BadRequestException;
 import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.Restaurant;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("foodDAO")
+@Repository
 public class FoodDAOImpl implements FoodDAO {
 
     private final SessionFactory sessionFactory;
@@ -28,7 +29,7 @@ public class FoodDAOImpl implements FoodDAO {
             sessionFactory.getCurrentSession().delete(food);
             return true;
         } catch (Exception e) {
-            throw new NotFoundException("cannot delete food");
+            throw new BadRequestException("cannot delete food");
         }
     }
 
@@ -37,7 +38,7 @@ public class FoodDAOImpl implements FoodDAO {
             sessionFactory.getCurrentSession().update(food);
             return true;
         } catch (Exception e) {
-            throw new NotFoundException("cannot update food");
+            throw new BadRequestException("cannot update food");
         }
     }
 

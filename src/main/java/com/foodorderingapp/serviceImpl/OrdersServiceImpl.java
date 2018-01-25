@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("orderService")
+@Service
 @Transactional
 public class OrdersServiceImpl implements OrdersService {
 
@@ -46,15 +46,12 @@ public class OrdersServiceImpl implements OrdersService {
         orders.setConfirm(false);
         orderDAO.add(orders);
 
-        OrderDetail orderDetail = new OrderDetail();
-
         for(FoodQuantity foodQuantity : orderDto.getFoodList()) {
-
+            OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrders(orders);
             orderDetail.setQuantity(foodQuantity.getQuantity());
             orderDetail.setFoodName(foodQuantity.getFoodName());
             orderDetail.setRestaurantName(foodQuantity.getRestaurantName());
-            orderDetail.setQuantity(foodQuantity.getQuantity());
             orderDetail.setFoodPrice(foodQuantity.getFoodPrice());
             Food food=foodDAO.getFoodByResName(foodQuantity.getRestaurantName(),foodQuantity.getFoodName());
             if(foodQuantity.getFoodPrice()!=food.getPrice()){
@@ -108,7 +105,6 @@ public class OrdersServiceImpl implements OrdersService {
             List<UserListDto> userListDtoList = new ArrayList<>();
 
             for (UserListMapperDto userListMapperDto : userListMapperDtos) {
-
                 UserListDto userListDto = new UserListDto();
                 List<FoodRes> foodResList = new ArrayList<>();
                 userListDto.setUserId(userListMapperDto.getUserId());
@@ -132,10 +128,11 @@ public class OrdersServiceImpl implements OrdersService {
         }
     }
 
-    public void update(int orderId) {
+    public Orders update(int orderId) {
         Orders orders1=orderDAO.getOrder(orderId);
         orders1.setConfirm(true);
         orderDAO.update(orders1);
+        return orders1;
     }
 }
 

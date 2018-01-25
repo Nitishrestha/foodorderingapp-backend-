@@ -28,7 +28,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name="user_id",nullable=false,updatable = false)
     private int userId;
     @Column(name="first_name")
     private String firstName;
@@ -49,8 +49,6 @@ public class User {
     @Column(name="balance")
     private double balance;
 
-
-
     public int getUserId() {
         return userId;
     }
@@ -66,7 +64,6 @@ public class User {
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
-
 
     public String getEmail() {
         return email;
@@ -138,7 +135,6 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
-
         return email != null ? email.equals(user.email) : user.email == null;
     }
 

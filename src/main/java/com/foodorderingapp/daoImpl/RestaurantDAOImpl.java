@@ -1,6 +1,7 @@
 package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.RestaurantDAO;
+import com.foodorderingapp.exception.BadRequestException;
 import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.Restaurant;
 import org.hibernate.SessionFactory;
@@ -10,13 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
-@Repository("restaurantDAO")
+@Repository
 public class RestaurantDAOImpl implements RestaurantDAO {
 
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public RestaurantDAOImpl(SessionFactory sessionFactory){
+    public RestaurantDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -25,7 +26,7 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory.getCurrentSession().delete(restaurant);
             return true;
         } catch (Exception e) {
-            throw new NotFoundException("restaurant doesnot exits");
+            throw new BadRequestException("restaurant doesn't exist");
         }
     }
 
@@ -35,26 +36,30 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory.getCurrentSession().flush();
             return restaurant;
         } catch (Exception e) {
-            throw new NotFoundException("cannot add restaurant");
+            throw new BadRequestException("cannot add restaurant");
         }
     }
 
     public boolean updateRestaurant(Restaurant restaurant) {
         try {
             sessionFactory
-            .getCurrentSession()
-            .update(restaurant);
+                    .getCurrentSession()
+                    .update(restaurant);
             return true;
         } catch (Exception e) {
-            throw new NotFoundException("cannot update restaurant");
+            throw new BadRequestException("cannot update restaurant");
         }
     }
 
     public List<Restaurant> getAll() {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("FROM Restaurant", Restaurant.class)
-                .getResultList();
+        try {
+            return sessionFactory
+                    .getCurrentSession()
+                    .createQuery("FROM Restaurant", Restaurant.class)
+                    .getResultList();
+        } catch (RuntimeException ex) {
+            throw new NotFoundException("cannot find restaurants");
+        }
     }
 
     public Restaurant getRestaurantById(int id) {
@@ -87,10 +92,14 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 
     @Override
     public Restaurant getRestaurantByName(String restaurantName) {
-        return  sessionFactory
-                        .getCurrentSession()
-                        .createQuery("FROM Restaurant where name= :restaurantName", Restaurant.class)
-                        .setParameter("restaurantName", restaurantName)
-                        .getSingleResult();
+        try {
+            return sessionFactory
+                    .getCurrentSession()
+                    .createQuery("FROM Restaurant where name= :restaurantName", Restaurant.class)
+                    .setParameter("restaurantName", restaurantName)
+                    .getSingleResult();
+        } catch (RuntimeException ex) {
+            throw new NotFoundException("cannot find restaurantName");
+        }
     }
 }

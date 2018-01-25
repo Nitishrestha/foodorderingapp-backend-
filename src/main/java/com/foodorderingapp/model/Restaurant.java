@@ -22,7 +22,7 @@ public class Restaurant implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurant_id")
+    @Column(name = "restaurant_id",nullable=false,updatable = false)
     private int id;
 
     @Column(name = "restaurant_name")
@@ -42,7 +42,7 @@ public class Restaurant implements Serializable {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Food> foodList = new ArrayList<Food>();
+    private List<Food> foodList =null;
 
     @Column(name = "status")
     private boolean isActive = true;

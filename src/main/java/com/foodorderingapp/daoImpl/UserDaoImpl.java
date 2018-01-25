@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("userDAO")
+@Repository
 public class UserDaoImpl implements UserDAO {
 
     private final SessionFactory sessionFactory;
@@ -55,14 +55,13 @@ public class UserDaoImpl implements UserDAO {
         }
     }
 
-    public User getUserByEmailId(User user) {
+    public User getUserByEmailId(String email) {
 
         try {
             User user1 = sessionFactory.getCurrentSession().
                     createQuery("FROM User WHERE email=:email", User.class).
-                    setParameter("email", user.getEmail()).
+                    setParameter("email", email).
                     getSingleResult();
-            System.out.println(user);
             return user1;
         } catch (Exception e) {
             return null;

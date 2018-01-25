@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("orderDetailDAO")
+@Repository("OrderDetailDAO")
 public class OrderDetailDaoImpl implements OrderDetailDAO {
 
     private final SessionFactory sessionFactory;

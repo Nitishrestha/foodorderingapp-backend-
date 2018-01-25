@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("orderDetailService")
+@Service
 @Transactional
 public class OrderDetailServiceImpl implements OrderDetailService {
 

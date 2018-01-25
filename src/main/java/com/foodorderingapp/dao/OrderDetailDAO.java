@@ -5,7 +5,7 @@ import com.foodorderingapp.model.OrderDetail;
 import java.util.List;
 
 public interface OrderDetailDAO {
+     void add(OrderDetail orderDetail);
      List<OrderDetailDto> getOrderDetail();
      List<OrderDetail> getOrderDetailByOrderId(int orderId);
-     void add(OrderDetail orderDetail);
 }

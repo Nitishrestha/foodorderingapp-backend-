@@ -26,7 +26,7 @@ public class OrderDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="order_detail_id")
+    @Column(name="order_detail_id",nullable=false,updatable = false)
     private int orderDetailId;
     @Column(name="food_name")
     private String foodName;

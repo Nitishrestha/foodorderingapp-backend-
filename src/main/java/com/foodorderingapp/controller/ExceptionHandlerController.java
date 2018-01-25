@@ -1,5 +1,6 @@
 package com.foodorderingapp.controller;
 
+import com.foodorderingapp.exception.BadRequestException;
 import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.exception.UnauthorizedExceptionHandler;
 import com.foodorderingapp.model.ExceptionResponse;
@@ -28,5 +29,14 @@ public class ExceptionHandlerController {
         error.setCallerUrl(request.getRequestURI());
         return new ResponseEntity<ExceptionResponse>(error, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ExceptionResponse> BadRequestException(final BadRequestException ex, final HttpServletRequest request) {
+        ExceptionResponse error = new ExceptionResponse();
+        error.setMessage(ex.getMessage());
+        error.setCallerUrl(request.getRequestURI());
+        return new ResponseEntity<ExceptionResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

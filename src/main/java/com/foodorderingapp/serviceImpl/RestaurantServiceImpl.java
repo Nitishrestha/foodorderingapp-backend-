@@ -13,7 +13,7 @@ import java.util.List;
  * Created by TOPSHI KREATS on 11/29/2017.
  */
 
-@Service("restaurantService")
+@Service
 @Transactional
 public class RestaurantServiceImpl implements RestaurantService {
 

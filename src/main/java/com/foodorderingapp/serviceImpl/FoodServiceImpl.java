@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("foodService")
+@Service
 @Transactional
 public class FoodServiceImpl implements FoodService{
 

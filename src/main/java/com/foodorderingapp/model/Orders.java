@@ -21,7 +21,7 @@ import java.util.Date;
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="order_id")
+    @Column(name="order_id",nullable=false,updatable = false)
     private int orderId;
     @Column(name="confirm")
     private Boolean confirm;
