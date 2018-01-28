@@ -7,7 +7,7 @@ import com.foodorderingapp.model.Orders;
 import java.util.List;
 
 public interface OrderDAO {
-     Boolean add(Orders orders);
+     Orders add(Orders orders);
      List<OrderListMapperDto> getOrders();
      void update(Orders orders);
      Orders getOrder(int orderId);

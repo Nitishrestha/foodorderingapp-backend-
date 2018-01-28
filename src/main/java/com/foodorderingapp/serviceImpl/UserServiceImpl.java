@@ -29,13 +29,12 @@ public class UserServiceImpl implements UserService {
 
     public User addUser(UserDto userDto) {
 
-
         User user = new User();
         user.setFirstName(userDto.getFirstName());
         user.setMiddleName(userDto.getMiddleName());
         user.setLastName(userDto.getLastName());
         user.setContactNo(userDto.getContactNo());
-       user.setUserPassword(userDto.getUserPassword());
+        user.setUserPassword(userDto.getUserPassword());
         user.setAddress(userDto.getAddress());
         user.setEmail(userDto.getEmail());
         user.setBalance(1200);
@@ -57,31 +56,40 @@ public class UserServiceImpl implements UserService {
     public LoginDto verifyUser(String userPassword,String email) {
 
         User user1 = userDAO.getUserByEmail(userPassword,email);
-        LoginDto loginDto1 = new LoginDto();
-        loginDto1.setId(user1.getUserId());
-        loginDto1.setFirstName(user1.getFirstName());
-        loginDto1.setMiddleName(user1.getMiddleName());
-        loginDto1.setLastName(user1.getLastName());
-        loginDto1.setContactNo(user1.getContactNo());
-        loginDto1.setEmail(user1.getEmail());
-        loginDto1.setAddress(user1.getAddress());
-        loginDto1.setUserRole(user1.getUserRole());
-        loginDto1.setBalance(user1.getBalance());
 
         if (user1 == null) {
             throw new NotFoundException("user not exits");
         } else {
+            LoginDto loginDto1 = new LoginDto();
+            loginDto1.setId(user1.getUserId());
+            loginDto1.setFirstName(user1.getFirstName());
+            loginDto1.setMiddleName(user1.getMiddleName());
+            loginDto1.setLastName(user1.getLastName());
+            loginDto1.setContactNo(user1.getContactNo());
+            loginDto1.setEmail(user1.getEmail());
+            loginDto1.setAddress(user1.getAddress());
+            loginDto1.setUserRole(user1.getUserRole());
+            loginDto1.setBalance(user1.getBalance());
+
             return loginDto1;
         }
     }
 
     public User getUser(int userId) {
-        return userDAO.getUser(userId);
+        User user= userDAO.getUser(userId);
+        if(user==null){
+            throw new NotFoundException("user not found");
+        }
+        return user;
     }
 
-    public void update(User user, int userId) {
+    public User update(User user, int userId) {
         User user1 = userDAO.getUser(userId);
+        if(user1==null){
+            throw new NotFoundException("user not found");
+        }
         user1.setBalance(user.getBalance());
         userDAO.update(user1);
+        return user1;
     }
 }

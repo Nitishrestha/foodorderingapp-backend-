@@ -2,6 +2,7 @@ package com.foodorderingapp.daoImpl;
 
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dto.OrderDetailDto;
+import com.foodorderingapp.exception.BadRequestException;
 import com.foodorderingapp.model.OrderDetail;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -20,12 +21,12 @@ public class OrderDetailDaoImpl implements OrderDetailDAO {
         this.sessionFactory=sessionFactory;
     }
 
-    public void add(OrderDetail orderDetail) {
+    public OrderDetail add(OrderDetail orderDetail) {
         try {
             sessionFactory.getCurrentSession().save(orderDetail);
-
+            return orderDetail;
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            throw new BadRequestException("cannot add orderDetail");
         }
     }
 

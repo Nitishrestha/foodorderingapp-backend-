@@ -4,79 +4,63 @@ import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.model.Food;
-import com.foodorderingapp.model.OrderDetail;
-import com.foodorderingapp.model.Orders;
-import com.foodorderingapp.model.User;
+import com.foodorderingapp.dto.BillDto;
+import com.foodorderingapp.dto.OrderDto;
+import com.foodorderingapp.model.*;
+import com.foodorderingapp.serviceImpl.OrdersServiceImpl;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 public class OrderTest {
 
-    private static AnnotationConfigApplicationContext context;
+    @Mock
+    private OrderDAO orderDAO;
 
-    private static OrderDAO orderDAO;
+    @Mock
+    private FoodDAO foodDAO;
 
-    private static OrderDetailDAO orderDetailDAO;
+    @Mock
+    private OrderDetailDAO orderDetailDAO;
 
-    private static FoodDAO foodDAO;
+    @Mock
+    private UserDAO userDAO;
 
-    private static UserDAO userDAO;
+    @InjectMocks
+    OrdersServiceImpl ordersService;
 
-    private Orders orders;
-
-    private OrderDetail orderDetail;
-
-
-    @BeforeClass
-    public static void init() {
-
-        context = new AnnotationConfigApplicationContext();
-        context.scan("com.foodorderingapp");
-        context.refresh();
-
-        orderDAO = (OrderDAO) context.getBean("orderDAO");
-        orderDetailDAO = (OrderDetailDAO) context.getBean("orderDetailDAO");
-        userDAO = (UserDAO) context.getBean("userDAO");
-        foodDAO = (FoodDAO) context.getBean("foodDAO");
-
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testAddOrder() {
+    public void testAdd(){
+        OrderDto orderDto=new OrderDto();
+        BillDto billDto=new BillDto();
+        User user=new User();
+        user.setUserId(1);
+        Orders orders=new Orders();
+        Food food=new Food();
+        food.setName("momo");
+        OrderDetail orderDetail=new OrderDetail();
 
-       /* User user = userDAO.getUser(15);
-        System.out.println("AAAAAA"+user.getFirstName());
-        orders = new Orders();
-        orders.setUser(user);
-        Assert.assertEquals(" Failed to added on order  ", true, orderDAO.addOrders(orders));
+        Restaurant restaurant=new Restaurant();
+        restaurant.setName("f1soft");
 
-        Food food = foodDAO.getFood(1);
-        orderDetail = new OrderDetail();
-
-        orders.setOrderId(64);
-        orderDetail.setSubTotal(total);
-
-        Assert.assertEquals("Expected order detail to be available. ", true, orderDetailDAO.addOrderDetail(orderDetail));
-
-    }
-
-    @Test
-    public void testGetOrder() {
-
-        Assert.assertEquals(" Expected size of order to be 23 .",23, orderDAO.getorders().size());
-
-    }
-
-    @Test
-    public void testGetOrderDetail() {
-
-        Assert.assertEquals("Failed to added on orderDetail  ",11, orderDetailDAO.getOrderDetail().size());
-
-    }
-
-}*/
+        when(userDAO.getUser(user.getUserId())).thenReturn(user);
+        when(orderDAO.add(orders)).thenReturn(orders);
+        when(foodDAO.getFoodByResName(food.getName(),restaurant.getAddress())).thenReturn(food);
+        doNothing().when(userDAO).update(user);
+        when(orderDetailDAO.add(anyObject())).thenReturn(orderDetail);
+        Assert.assertEquals(ordersService.add(orderDto),billDto);
     }
 }

@@ -15,5 +15,5 @@ public interface UserService {
     List<User> getUsers();
     LoginDto verifyUser(String userPassword,String email);
     User getUser(int userId);
-    void update(User user,int userId);
+    User update(User user,int userId);
 }
