@@ -1,5 +1,6 @@
 package com.foodorderingapp.serviceImpl;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.RestaurantService;
@@ -43,6 +44,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<Restaurant> getAll() {
         return restaurantDAO.getAll();
     }
+
+    @Override
+    public List<Restaurant> getPaginatedRestaurant(PageModel pageModel) {
+        return restaurantDAO.getPaginatedRestaurant(pageModel);
+    }
+
     public Restaurant getRestaurantById(int id) {
         return restaurantDAO.getRestaurantById(id);
     }
@@ -72,5 +79,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant getRestaurantByName(String restaurantName) {
         return restaurantDAO.getRestaurantByName(restaurantName);
+    }
+    @Override
+    public  long countRestaurant(){
+        return  restaurantDAO.countRestaurant();
     }
 }

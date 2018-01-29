@@ -1,10 +1,10 @@
 package com.foodorderingapp.serviceImpl;
 
-import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.LoginDto;
 import com.foodorderingapp.dto.UserDto;
-import com.foodorderingapp.exception.NotFoundException;
+import com.foodorderingapp.dto.UserListMapperDto;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,35 +18,33 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
-    private final OrderDetailDAO orderDetailDAO;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, OrderDetailDAO orderDetailDAO) {
+    public UserServiceImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
-        this.orderDetailDAO = orderDetailDAO;
     }
-
 
     public User addUser(UserDto userDto) {
 
-        User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setMiddleName(userDto.getMiddleName());
-        user.setLastName(userDto.getLastName());
-        user.setContactNo(userDto.getContactNo());
-        user.setUserPassword(userDto.getUserPassword());
-        user.setAddress(userDto.getAddress());
-        user.setEmail(userDto.getEmail());
-        user.setBalance(1200);
-        user.setUserRole("user");
-        User user1 = userDAO.getUserByEmailId(user.getEmail());
-        if (user1 != null) {
-            throw new NotFoundException("plz rewite email");
 
-        } else if (user1 == null) {
+        User user1 = userDAO.getUserByEmailId(userDto.getEmail());
+        if (user1 != null) {
+            throw new DataNotFoundException("plz rewite email");
+
+        } else if(user1==null) {
+            User user = new User();
+            user.setFirstName(userDto.getFirstName());
+            user.setMiddleName(userDto.getMiddleName());
+            user.setLastName(userDto.getLastName());
+            user.setContactNo(userDto.getContactNo());
+            user.setUserPassword(userDto.getUserPassword());
+            user.setAddress(userDto.getAddress());
+            user.setEmail(userDto.getEmail());
+            user.setUserRole("user");
             userDAO.addUser(user);
+            return user;
         }
-        return user;
+        return user1;
     }
 
     public List<User> getUsers() {
@@ -58,7 +56,7 @@ public class UserServiceImpl implements UserService {
         User user1 = userDAO.getUserByEmail(userPassword,email);
 
         if (user1 == null) {
-            throw new NotFoundException("user not exits");
+            throw new DataNotFoundException("user not exits");
         } else {
             LoginDto loginDto1 = new LoginDto();
             loginDto1.setId(user1.getUserId());
@@ -78,18 +76,18 @@ public class UserServiceImpl implements UserService {
     public User getUser(int userId) {
         User user= userDAO.getUser(userId);
         if(user==null){
-            throw new NotFoundException("user not found");
+            throw new DataNotFoundException("user not found");
         }
         return user;
     }
 
-    public User update(User user, int userId) {
-        User user1 = userDAO.getUser(userId);
-        if(user1==null){
-            throw new NotFoundException("user not found");
-        }
-        user1.setBalance(user.getBalance());
-        userDAO.update(user1);
-        return user1;
+    public User update(User user) {
+        userDAO.update(user);
+        return user;
+    }
+
+    @Override
+    public List<UserListMapperDto> getByUserId(int userId) {
+       return userDAO.getByUserId(userId);
     }
 }

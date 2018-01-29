@@ -1,4 +1,4 @@
-package com.foodorderingapp.model;
+package com.foodorderingapp.errormessage;
 
 public class ExceptionResponse {
 

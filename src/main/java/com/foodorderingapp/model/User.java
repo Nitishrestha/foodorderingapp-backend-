@@ -1,14 +1,11 @@
 package com.foodorderingapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.foodorderingapp.dto.UserListDto;
 import com.foodorderingapp.dto.UserListMapperDto;
-import com.sun.istack.internal.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name="tbl_users")
@@ -30,6 +27,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id",nullable=false,updatable = false)
     private int userId;
+    @NotNull(message = "Can't be null.")
     @Column(name="first_name")
     private String firstName;
     @Column(name="middle_name")
@@ -47,7 +45,23 @@ public class User {
     @Column(name="user_role")
     private String userRole;
     @Column(name="balance")
-    private double balance;
+    private double balance = 1200;
+
+    public User(String firstName, String middleName, String lastName, String userPassword, String email, String contactNo, String address, String userRole, double balance) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.userPassword = userPassword;
+        this.email = email;
+        this.contactNo = contactNo;
+        this.address = address;
+        this.userRole = userRole;
+        this.balance = balance;
+    }
+
+    public User(){
+
+    }
 
     public int getUserId() {
         return userId;
@@ -130,16 +144,16 @@ public class User {
     }
 
     @Override
+    public int hashCode() {
+        return email != null ? email.hashCode() : 0;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
         return email != null ? email.equals(user.email) : user.email == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return email != null ? email.hashCode() : 0;
     }
 }

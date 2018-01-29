@@ -3,7 +3,7 @@ package com.foodorderingapp.daoImpl;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.UserListMapperDto;
-import com.foodorderingapp.exception.NotFoundException;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDAO {
             sessionFactory.getCurrentSession().persist(user);
             return user;
         } catch (Exception ex) {
-            throw new NotFoundException("cannot add user");
+            throw new DataNotFoundException("cannot add user");
         }
     }
 
@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDAO {
                     .setParameter("userPassword", userPassword).getSingleResult();
             return user1;
         } catch (Exception ex) {
-            throw new NotFoundException("user not found");
+            throw new DataNotFoundException("user not found");
         }
     }
 

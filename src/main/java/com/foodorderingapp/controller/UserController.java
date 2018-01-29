@@ -3,8 +3,6 @@ package com.foodorderingapp.controller;
 import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.dto.LoginDto;
 import com.foodorderingapp.dto.UserDto;
-import com.foodorderingapp.dto.UserListDto;
-import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,9 +25,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> add(@RequestBody UserDto userDto) {
-        userService.addUser(userDto);
-        return new ResponseEntity<String>("user added", HttpStatus.OK);
+    public ResponseEntity<User> add(@RequestBody @Valid UserDto userDto) {
+        User user=userService.addUser(userDto);
+        System.out.println(user);
+        return new ResponseEntity(user , HttpStatus.OK);
     }
 
     @GetMapping
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/verify")
-    public LoginDto verifyUser(@RequestBody LoginDto loginDto) {
+    public LoginDto verifyUser(@RequestBody @Valid LoginDto loginDto) {
         LoginDto loginDto1 = userService.verifyUser(loginDto.getUserPassword(), loginDto.getEmail());
         return loginDto1;
     }

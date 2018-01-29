@@ -2,7 +2,7 @@ package com.foodorderingapp.test;
 
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.UserDto;
-import com.foodorderingapp.exception.NotFoundException;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
@@ -29,7 +29,7 @@ public class UserFailTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testFailToAdd(){
         User user=new User();
         user.setEmail("hari1@yahoo.com");
@@ -42,7 +42,7 @@ public class UserFailTest {
         assertNull(userService.addUser(dto));
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testVerifyUserWhenNull(){
         User user=new User();
         user.setUserPassword("ram");
@@ -51,7 +51,7 @@ public class UserFailTest {
         Assert.assertEquals(userService.verifyUser(user.getUserPassword(),user.getEmail()).getEmail(),user.getEmail());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void failTestGetUser(){
         User user=new User();
         user.setUserId(1);
@@ -59,7 +59,7 @@ public class UserFailTest {
         Assert.assertNull(userService.getUser(user.getUserId()));
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testUpdateUser(){
         User user=new User();
         user.setUserId(1);

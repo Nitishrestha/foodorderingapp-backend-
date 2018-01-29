@@ -31,7 +31,7 @@ public class OrderDetail {
     @Column(name="food_name")
     private String foodName;
     @Column(name="food_price")
-    private int foodPrice;
+    private double foodPrice;
     @Column(name="restaurant_name")
     private String restaurantName;
     @Column(name="quantity")
@@ -74,11 +74,11 @@ public class OrderDetail {
         this.foodName = foodName;
     }
 
-    public int getFoodPrice() {
+    public double getFoodPrice() {
         return foodPrice;
     }
 
-    public void setFoodPrice(int foodPrice) {
+    public void setFoodPrice(double foodPrice) {
         this.foodPrice = foodPrice;
     }
 

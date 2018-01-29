@@ -37,7 +37,7 @@ public class Restaurant implements Serializable {
 
     @Column(name = "restaurant_contact")
     @NotBlank(message = "please enter the restaurant contact")
-    @Size(min=10,max=15)
+    @Size(min=7,max=10)
     private String contact ;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
@@ -46,6 +46,16 @@ public class Restaurant implements Serializable {
 
     @Column(name = "status")
     private boolean isActive = true;
+
+    public Restaurant(String name, String address, String contact, List<Food> foodList) {
+        this.name = name;
+        this.address = address;
+        this.contact = contact;
+        this.foodList = foodList;
+    }
+
+    public Restaurant() {
+    }
 
     public boolean isActive() {
         return isActive;

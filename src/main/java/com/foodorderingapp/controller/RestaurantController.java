@@ -1,13 +1,19 @@
 package com.foodorderingapp.controller;
 
+import com.foodorderingapp.commons.GenericResponse;
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.commons.WebUrlConstant;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.FoodService;
 import com.foodorderingapp.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,7 +24,7 @@ public class RestaurantController {
     private static FoodService foodService;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, FoodService foodService){
+    public RestaurantController(RestaurantService restaurantService, FoodService foodService) {
         this.restaurantService = restaurantService;
         this.foodService = foodService;
     }
@@ -29,7 +35,7 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
+    public Restaurant addRestaurant(@RequestBody @Valid Restaurant restaurant) {
         restaurantService.addRestaurant(restaurant);
         return restaurant;
     }
@@ -57,14 +63,32 @@ public class RestaurantController {
     }
 
     @GetMapping(value = "/{id}/activate")
-    public int activateRestaurant(@PathVariable int id){
+    public int activateRestaurant(@PathVariable int id) {
         restaurantService.activate(id);
         return id;
     }
 
     @GetMapping(value = "/{id}/deactivate")
-    public int deactivateRestaurant(@PathVariable int id){
+    public int deactivateRestaurant(@PathVariable int id) {
         restaurantService.deactivate(id);
         return id;
+    }
+
+    @GetMapping(value = "/page/{firstResult}/{maxResult}")
+    public ResponseEntity<GenericResponse> getPaginatedRestaurant(@PathVariable int firstResult, @PathVariable int maxResult) {
+        PageModel pageModel = new PageModel();
+        pageModel.setFirstResult(firstResult);
+        pageModel.setMaxResult(maxResult);
+        List<Restaurant> restaurant = restaurantService.getPaginatedRestaurant(pageModel);
+        if (restaurant == null && restaurant.size() == 0) {
+            throw new DataNotFoundException("Record not found !!");
+        }
+
+        GenericResponse genericResponse = new GenericResponse();
+        genericResponse.setResponseData(restaurant);
+        genericResponse.setPageModel(pageModel);
+        long count = restaurantService.countRestaurant();
+        pageModel.setCount(count);
+        return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 }

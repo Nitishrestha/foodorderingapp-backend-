@@ -1,10 +1,13 @@
 package com.foodorderingapp.daoImpl;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.exception.BadRequestException;
-import com.foodorderingapp.exception.NotFoundException;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.Restaurant;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -58,8 +61,18 @@ public class RestaurantDAOImpl implements RestaurantDAO {
                     .createQuery("FROM Restaurant", Restaurant.class)
                     .getResultList();
         } catch (RuntimeException ex) {
-            throw new NotFoundException("cannot find restaurants");
+            throw new DataNotFoundException("cannot find restaurants");
         }
+    }
+
+    @Override
+    public List<Restaurant> getPaginatedRestaurant(PageModel pageModel) {
+            Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("From Restaurant",Restaurant.class);
+        query.setFirstResult(pageModel.getFirstResult()*pageModel.getMaxResult());
+        query.setMaxResults(pageModel.getMaxResult());
+        List<Restaurant> restaurantList = query.getResultList();
+        return restaurantList;
     }
 
     public Restaurant getRestaurantById(int id) {
@@ -99,7 +112,12 @@ public class RestaurantDAOImpl implements RestaurantDAO {
                     .setParameter("restaurantName", restaurantName)
                     .getSingleResult();
         } catch (RuntimeException ex) {
-            throw new NotFoundException("cannot find restaurantName");
+            throw new DataNotFoundException("cannot find restaurantName");
         }
+    }
+
+    @Override
+    public long countRestaurant() {
+        return sessionFactory.getCurrentSession().createQuery("select count(1) from  Restaurant",Long.class).getSingleResult();
     }
 }

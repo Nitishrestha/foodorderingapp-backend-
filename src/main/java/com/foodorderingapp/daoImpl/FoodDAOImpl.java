@@ -3,7 +3,7 @@ package com.foodorderingapp.daoImpl;
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.exception.BadRequestException;
-import com.foodorderingapp.exception.NotFoundException;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.Restaurant;
 import org.hibernate.SessionFactory;
@@ -77,7 +77,7 @@ public class FoodDAOImpl implements FoodDAO {
             return foodList;
 
         } catch (Exception e) {
-            throw new NotFoundException("cannot add food to restaurant");
+            throw new DataNotFoundException("cannot add food to restaurant");
         }
     }
 
@@ -90,7 +90,7 @@ public class FoodDAOImpl implements FoodDAO {
                     .setParameter("foodName",foodName)
                     .getSingleResult();
         } catch (Exception e) {
-            throw new NotFoundException("foodName or restaurant is not in the list");
+            throw new DataNotFoundException("foodName or restaurant is not in the list");
         }
     }
 }

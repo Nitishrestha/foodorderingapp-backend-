@@ -1,11 +1,18 @@
 package com.foodorderingapp.serviceImpl;
 
-import com.foodorderingapp.dao.*;
+import com.foodorderingapp.dao.OrderDAO;
+import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.dto.*;
-import com.foodorderingapp.exception.NotFoundException;
-import com.foodorderingapp.model.*;
-import com.foodorderingapp.reuse.Reuse;
+import com.foodorderingapp.exception.DataNotFoundException;
+import com.foodorderingapp.model.Food;
+import com.foodorderingapp.model.OrderDetail;
+import com.foodorderingapp.model.Orders;
+import com.foodorderingapp.model.User;
+import com.foodorderingapp.service.FoodService;
+import com.foodorderingapp.service.OrderDetailService;
 import com.foodorderingapp.service.OrdersService;
+import com.foodorderingapp.service.UserService;
+import com.foodorderingapp.utils.FoodResUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,19 +24,17 @@ import java.util.List;
 @Transactional
 public class OrdersServiceImpl implements OrdersService {
 
-    private final UserDAO userDAO;
-    private final FoodDAO foodDAO;
+    private final UserService userService;
+    private final FoodService foodService;
     private final OrderDAO orderDAO;
-    private final RestaurantDAO restaurantDAO;
-    private final OrderDetailDAO orderDetailDAO;
+    private final OrderDetailService orderDetailService;
 
     @Autowired
-    public OrdersServiceImpl(UserDAO userDAO,FoodDAO foodDAO,OrderDAO orderDAO,OrderDetailDAO orderDetailDAO,RestaurantDAO restaurantDAO){
-        this.userDAO=userDAO;
-        this.foodDAO=foodDAO;
+    public OrdersServiceImpl(UserService userService,FoodService foodService,OrderDAO orderDAO,OrderDetailService orderDetailService){
+        this.userService=userService;
+        this.foodService=foodService;
         this.orderDAO=orderDAO;
-        this.orderDetailDAO=orderDetailDAO;
-        this.restaurantDAO=restaurantDAO;
+        this.orderDetailService=orderDetailService;
     }
 
     double balance;
@@ -37,9 +42,9 @@ public class OrdersServiceImpl implements OrdersService {
 
         BillDto bal=new BillDto();
         List<Food> foodList=new ArrayList<>();
-        User user=userDAO.getUser(orderDto.getUserId());
+        User user=userService.getUser(orderDto.getUserId());
         if(user == null){
-            throw new NotFoundException("user not found.");
+            throw new DataNotFoundException("user not found.");
         }
         Orders orders = new Orders();
         orders.setUser(user);
@@ -53,22 +58,22 @@ public class OrdersServiceImpl implements OrdersService {
             orderDetail.setFoodName(foodQuantity.getFoodName());
             orderDetail.setRestaurantName(foodQuantity.getRestaurantName());
             orderDetail.setFoodPrice(foodQuantity.getFoodPrice());
-            Food food=foodDAO.getFoodByResName(foodQuantity.getRestaurantName(),foodQuantity.getFoodName());
+            Food food=foodService.getFoodByResName(foodQuantity.getRestaurantName(),foodQuantity.getFoodName());
             if(foodQuantity.getFoodPrice()!=food.getPrice()){
-                throw new NotFoundException("price not found");
+                throw new DataNotFoundException("price not found");
             }
 
             if(foodQuantity.getQuantity()<=0){
-                throw new NotFoundException(" quantity should be greater than 0");
+                throw new DataNotFoundException(" quantity should be greater than 0");
             }
             foodList.add(food);
-            int amount=foodQuantity.getQuantity()*foodQuantity.getFoodPrice();
+            double amount=foodQuantity.getQuantity()*foodQuantity.getFoodPrice();
             balance=user.getBalance()-amount;
             user.setBalance(balance);
-            userDAO.update(user);
+            userService.update(user);
             bal.setBalance(balance);
             bal.setFoodList(foodList);
-            orderDetailDAO.add(orderDetail);
+            orderDetailService.add(orderDetail);
         }
         return  bal;
         }
@@ -85,23 +90,23 @@ public class OrdersServiceImpl implements OrdersService {
                 orderListDto.setOrderId(orderListMapperDto.getOrderId());
                 orderListDto.setUserId(orderListMapperDto.getUserId());
                 orderListDto.setOrderedDate(orderListMapperDto.getOrderedDate());
-                List<OrderDetail> orderDetailList=orderDetailDAO.getOrderDetailByOrderId(orderListMapperDto.getOrderId());
+                List<OrderDetail> orderDetailList=orderDetailService.getOrderDetailByOrderId(orderListMapperDto.getOrderId());
 
                 for(OrderDetail orderDetail:orderDetailList){
-                    foodResList.add(Reuse.addFoodRes(orderDetail));
+                    foodResList.add(FoodResUtil.addFoodRes(orderDetail));
                     orderListDto.setFoodResList(foodResList);
                 }
                 orderListDtoList.add(orderListDto);
             }
             return  orderListDtoList;
         }catch(RuntimeException e){
-            throw new NotFoundException("Cannot find order list");
+            throw new DataNotFoundException("Cannot find order list");
         }
     }
     public List<UserListDto> getByUserId(int userId) {
 
         try {
-            List<UserListMapperDto> userListMapperDtos = userDAO.getByUserId(userId);
+            List<UserListMapperDto> userListMapperDtos = userService.getByUserId(userId);
             List<UserListDto> userListDtoList = new ArrayList<>();
 
             for (UserListMapperDto userListMapperDto : userListMapperDtos) {
@@ -113,10 +118,10 @@ public class OrdersServiceImpl implements OrdersService {
                 userListDto.setMiddleName(userListMapperDto.getMiddleName());
                 userListDto.setLastName(userListMapperDto.getLastName());
                 userListDto.setOrderedDate(userListMapperDto.getOrderedDate());
-                List<OrderDetail> orderDetailList = orderDetailDAO.getOrderDetailByOrderId(userListMapperDto.getOrderId());
+                List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailByOrderId(userListMapperDto.getOrderId());
 
                 for (OrderDetail orderDetail : orderDetailList) {
-                    foodResList.add(Reuse.addFoodRes(orderDetail));
+                    foodResList.add(FoodResUtil.addFoodRes(orderDetail));
                     userListDto.setFoodResList(foodResList);
                 }
                 userListDtoList.add(userListDto);
@@ -124,7 +129,7 @@ public class OrdersServiceImpl implements OrdersService {
             return userListDtoList;
         }
         catch (Exception e) {
-            throw new NotFoundException("Cannot find order list");
+            throw new DataNotFoundException("Cannot find order list");
         }
     }
 

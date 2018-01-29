@@ -2,16 +2,13 @@
 package com.foodorderingapp.test;
 
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.dto.LoginDto;
 import com.foodorderingapp.dto.UserDto;
-import com.foodorderingapp.exception.NotFoundException;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
@@ -19,8 +16,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-//@SpringBootTest
-//@RunWith(SpringRunner.class)
+
 public class UserTest {
 
     @Mock
@@ -96,6 +92,6 @@ public class UserTest {
         user.setUserId(1);
         when(userDAO.getUser(user.getUserId())).thenReturn(user);
         doNothing().when(userDAO).update(user);
-        Assert.assertEquals(userService.update(user,user.getUserId()),user);
+        Assert.assertEquals(userService.update(user),user);
     }
 }

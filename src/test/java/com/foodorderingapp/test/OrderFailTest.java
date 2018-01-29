@@ -4,100 +4,66 @@ import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.model.OrderDetail;
-import com.foodorderingapp.model.Orders;
-import com.foodorderingapp.model.User;
-import org.junit.BeforeClass;
+import com.foodorderingapp.dto.FoodQuantity;
+import com.foodorderingapp.dto.OrderDto;
+import com.foodorderingapp.exception.DataNotFoundException;
+import com.foodorderingapp.model.*;
+import com.foodorderingapp.serviceImpl.OrdersServiceImpl;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 public class OrderFailTest {
 
-    private static AnnotationConfigApplicationContext context;
+    @Mock
+    private OrderDAO orderDAO;
 
-    private static OrderDAO orderDAO;
+    @Mock
+    private FoodDAO foodDAO;
 
-    private static OrderDetailDAO orderDetailDAO;
+    @Mock
+    private OrderDetailDAO orderDetailDAO;
 
-    private static FoodDAO foodDAO;
+    @Mock
+    private UserDAO userDAO;
 
-    private static UserDAO userDAO;
+    @InjectMocks
+    OrdersServiceImpl ordersService;
 
-    private Orders orders;
-
-    private OrderDetail orderDetail;
-
-
-    @BeforeClass
-    public static void init() {
-
-        context = new AnnotationConfigApplicationContext();
-        context.scan("com.foodorderingapp");
-        context.refresh();
-
-        orderDAO = (OrderDAO) context.getBean("orderDAO");
-        orderDetailDAO = (OrderDetailDAO) context.getBean("orderDetailDAO");
-        foodDAO = (FoodDAO) context.getBean("foodDAO");
-        userDAO=(UserDAO)context.getBean("userDAO");
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
+    @Test(expected = DataNotFoundException.class)
+    public void testAdd(){
 
-    ExceptionClass exceptionClass=new ExceptionClass();
-    @Test
-    public void testAddOrder() {
+        User user=new User();
 
-//        Food food1=new Food();
+        Orders orders=new Orders();
 
-        User user = userDAO.getUser(20);
-    //      System.out.println(user.getFirstName());
+        Food food=new Food("momo",100,new Restaurant());
+        OrderDto orderDto=new OrderDto(1,new ArrayList<>());
 
-        try {
+        Restaurant restaurant=new Restaurant("f1soft","hattisar","9817651648",new ArrayList<>());
 
-            orders = new Orders();
-            orders.setUser(user);
+        OrderDetail orderDetail=new OrderDetail();
+        FoodQuantity foodQuantity=new FoodQuantity(food.getName(),food.getPrice(),restaurant.getName(),1);
 
-            if(user==null) {
-
-              exceptionClass.throwNullPointerException();
-                System.out.println("AAAA");
-            }
-
-//            Assert.assertEquals( true, orderDAO.addOrders(orders));
-
-        }catch(Exception e){
-
-            System.out.println("BBBB"+e);
-        }
-
-
-
-//        Food food = foodDAO.getFood(1);
-//        if (food == null) {
-//
-//            thrown.expect(NullPointerException.class);
-//        }
-//
-//        Orders orders = orderDAO.getorder(1);
-//
-//        orderDetail = new OrderDetail();
-//        orderDetail.setOrders(orders);
-//        orderDetail.setFood(food);
-//        orderDetail.setQuantity(3);
-//
-//
-//
-//        try {
-//
-//            Assert.assertEquals("Failed to added on orderDetail  ", true, orderDetailDAO.addOrderDetail(orderDetail));
-//
-//             if(orders == null) {
-//
-//                 thrown.expect(NullPointerException.class);
-//             }
-//
-//        } catch (Exception e) {
-//
-//           System.out.println("AAAAAAA" + e);
-//        }
+        when(userDAO.getUser(orderDto.getUserId())).thenReturn(user);
+        when(orderDAO.add(orders)).thenReturn(orders);
+        when(foodDAO.getFoodByResName(foodQuantity.getFoodName(),foodQuantity.getRestaurantName())).thenReturn(food);
+        doNothing().when(userDAO).update(user);
+        when(orderDetailDAO.add(anyObject())).thenReturn(orderDetail);
+        Assert.assertNull(ordersService.add(orderDto));
     }
 }

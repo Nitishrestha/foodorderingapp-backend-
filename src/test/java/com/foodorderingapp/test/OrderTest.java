@@ -4,7 +4,7 @@ import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.dto.BillDto;
+import com.foodorderingapp.dto.FoodQuantity;
 import com.foodorderingapp.dto.OrderDto;
 import com.foodorderingapp.model.*;
 import com.foodorderingapp.serviceImpl.OrdersServiceImpl;
@@ -15,7 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Matchers.anyInt;
+import java.util.ArrayList;
+
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -44,23 +45,24 @@ public class OrderTest {
 
     @Test
     public void testAdd(){
-        OrderDto orderDto=new OrderDto();
-        BillDto billDto=new BillDto();
+
         User user=new User();
         user.setUserId(1);
         Orders orders=new Orders();
-        Food food=new Food();
-        food.setName("momo");
+
+        Food food=new Food("momo",100,new Restaurant());
+        OrderDto orderDto=new OrderDto(1,new ArrayList<>());
+
+        Restaurant restaurant=new Restaurant("f1soft","hattisar","9817651648",new ArrayList<>());
+
         OrderDetail orderDetail=new OrderDetail();
+        FoodQuantity foodQuantity=new FoodQuantity(food.getName(),food.getPrice(),restaurant.getName(),1);
 
-        Restaurant restaurant=new Restaurant();
-        restaurant.setName("f1soft");
-
-        when(userDAO.getUser(user.getUserId())).thenReturn(user);
+        when(userDAO.getUser(orderDto.getUserId())).thenReturn(user);
         when(orderDAO.add(orders)).thenReturn(orders);
-        when(foodDAO.getFoodByResName(food.getName(),restaurant.getAddress())).thenReturn(food);
+        when(foodDAO.getFoodByResName(foodQuantity.getFoodName(),foodQuantity.getRestaurantName())).thenReturn(food);
         doNothing().when(userDAO).update(user);
         when(orderDetailDAO.add(anyObject())).thenReturn(orderDetail);
-        Assert.assertEquals(ordersService.add(orderDto),billDto);
+        Assert.assertNotNull(ordersService.add(orderDto));
     }
 }

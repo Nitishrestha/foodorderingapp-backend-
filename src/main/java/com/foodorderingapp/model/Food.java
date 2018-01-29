@@ -3,8 +3,10 @@ package com.foodorderingapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tbl_food")
@@ -15,8 +17,11 @@ public class Food{
     @Column(name = "food_id",nullable=false,updatable = false)
     private int id;
     @Column(name="food_name")
+    @NotBlank(message = "This field is required.")
+    @Size(min=4,max=15,message = "first name must be between 2 and 20.")
     private String name;
     @Column(name = "food_price")
+    @NotBlank(message = "This field is required.")
     private double price;
     @ManyToOne
     @NotFound(action = NotFoundAction.IGNORE)
@@ -25,6 +30,16 @@ public class Food{
     private Restaurant restaurant;
 
     private transient int restaurantId;
+
+    public Food(String name, double price, Restaurant restaurant) {
+        this.name = name;
+        this.price = price;
+        this.restaurant = restaurant;
+    }
+
+    public Food(){
+
+    }
 
     public int getId() {
         return id;

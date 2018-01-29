@@ -1,9 +1,9 @@
-package com.foodorderingapp.reuse;
+package com.foodorderingapp.utils;
 
 import com.foodorderingapp.dto.FoodRes;
 import com.foodorderingapp.model.OrderDetail;
 
-public class Reuse {
+public class FoodResUtil {
 
     public static FoodRes addFoodRes(OrderDetail orderDetail){
         FoodRes foodRes=new FoodRes();

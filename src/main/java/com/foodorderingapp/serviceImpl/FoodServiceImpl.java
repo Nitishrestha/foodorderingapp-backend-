@@ -50,7 +50,9 @@ public class FoodServiceImpl implements FoodService{
         return foodDAO.addFoodsToRestaurant(foodList);
     }
 
-   /* public Food getFoodByName(String foodName) {
-        return foodDAO.getFoodByName(foodName);
-    }*/
+    @Override
+    public Food getFoodByResName(String restaurantName, String foodName) {
+        return foodDAO.getFoodByResName(restaurantName,foodName);
+    }
+
 }
