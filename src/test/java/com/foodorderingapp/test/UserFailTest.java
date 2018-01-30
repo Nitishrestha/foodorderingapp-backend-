@@ -1,80 +1,70 @@
 package com.foodorderingapp.test;
 
 import com.foodorderingapp.dao.UserDAO;
-import com.foodorderingapp.model.Orders;
+import com.foodorderingapp.dto.UserDto;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.User;
+import com.foodorderingapp.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import javax.swing.text.html.parser.AttributeList;
-import java.security.spec.ECField;
-import java.util.List;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 public class UserFailTest {
 
+    @Mock
+    private UserDAO userDAO;
 
-    private static AnnotationConfigApplicationContext context;
+    @InjectMocks
+    UserServiceImpl userService;
 
-    private static UserDAO userDAO;
-
-    private static User user;
-
-    @BeforeClass
-    public static void init() {
-
-        context = new AnnotationConfigApplicationContext();
-        context.scan("com.foodorderingapp");
-        context.refresh();
-
-        userDAO = (UserDAO) context.getBean("userDAO");
-
-
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    @Test(expected = DataNotFoundException.class)
+    public void testFailToAdd(){
+        User user=new User();
+        user.setEmail("hari1@yahoo.com");
 
-    @Test
-    public void testFailAddUser() {
+        UserDto dto=new UserDto();
+        dto.setEmail("hari1@yahoo.com");
 
-        user = new User();
+        when(userDAO.getUserByEmailId(user.getEmail())).thenReturn(new User());
+        when(userDAO.addUser(user)).thenReturn(user);
+        assertNull(userService.addUser(dto));
+    }
 
-//      user.setFirstName("binov");
-        user.setMiddleName("bahadur");
-        user.setLastName("pant");
+    @Test(expected = DataNotFoundException.class)
+    public void testVerifyUserWhenNull(){
+        User user=new User();
         user.setUserPassword("ram");
-        user.setEmail("gl");
-        user.setAddress("bkt");
-        user.setContactNo("914891841");
-        user.setBalance(5000);
-        user.setUserRole("user");
-
-
-//        Assert.assertEquals("Fail to add on User", true, userDAO.addUser(user));
-        try {
-
-            userDAO.addUser(user);
-
-        } catch (Exception e) {
-
-            thrown.expect(NullPointerException.class);
-
-        }
+        user.setEmail("rr");
+        when(userDAO.getUserByEmail(user.getUserPassword(),user.getEmail())).thenReturn(null);
+        Assert.assertEquals(userService.verifyUser(user.getUserPassword(),user.getEmail()).getEmail(),user.getEmail());
     }
 
-//    @Test
-//    public void testFailGetUser() {
-//
-//        List<User> userList=userDAO.getUsers();
-//
-//        if(userList==null){
-//
-//            thrown.expect(IndexOutOfBoundsException.class);
-//        }
-//
-//    }
+    @Test(expected = DataNotFoundException.class)
+    public void failTestGetUser(){
+        User user=new User();
+        user.setUserId(1);
+        when(userDAO.getUser(user.getUserId())).thenReturn(null);
+        Assert.assertNull(userService.getUser(user.getUserId()));
+    }
+
+    @Test(expected = DataNotFoundException.class)
+    public void testUpdateUser(){
+        User user=new User();
+        user.setUserId(1);
+        when(userDAO.getUser(user.getUserId())).thenReturn(null);
+        doNothing().when(userDAO).update(user);
+        Assert.assertNull(userService.getUser(user.getUserId()));
+    }
 }

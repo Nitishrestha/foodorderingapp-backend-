@@ -1,5 +1,6 @@
 package com.foodorderingapp.service;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.model.Food;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface FoodService {
     Food getFoodById(int id);
     List<Food> getFoodByRestaurantId(int id);
     List<Food> addFoodsToRestaurant(List<Food> foodList);
-    Food getFoodByName(String foodName);
+    Food getFoodByResName(String restaurantName,String foodName);
+    List<Food> getPaginatedFood(PageModel pageModel, int id);
+    long countFood(int id);
 
 }

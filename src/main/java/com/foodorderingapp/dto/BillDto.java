@@ -7,14 +7,14 @@ import java.util.List;
 
 public class BillDto {
 
-    private int balance;
-    private List<Food> foodList=new ArrayList<Food>();
+    private double balance;
+    private List<Food> foodList=null;
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

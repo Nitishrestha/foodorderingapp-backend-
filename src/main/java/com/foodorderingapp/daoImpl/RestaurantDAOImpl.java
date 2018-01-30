@@ -1,23 +1,26 @@
 package com.foodorderingapp.daoImpl;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.dao.RestaurantDAO;
+import com.foodorderingapp.exception.BadRequestException;
+import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.Restaurant;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
-@Repository("restaurantDAO")
-@Transactional
+@Repository
 public class RestaurantDAOImpl implements RestaurantDAO {
 
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public RestaurantDAOImpl(SessionFactory sessionFactory){
+    public RestaurantDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -26,9 +29,8 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory.getCurrentSession().delete(restaurant);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new BadRequestException("restaurant doesn't exist");
         }
-        return false;
     }
 
     public Restaurant addRestaurant(Restaurant restaurant) {
@@ -37,30 +39,40 @@ public class RestaurantDAOImpl implements RestaurantDAO {
             sessionFactory.getCurrentSession().flush();
             return restaurant;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new BadRequestException("cannot add restaurant");
         }
-        return null;
     }
 
     public boolean updateRestaurant(Restaurant restaurant) {
         try {
             sessionFactory
-            .getCurrentSession()
-            .update(restaurant);
-
+                    .getCurrentSession()
+                    .update(restaurant);
             return true;
-
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new BadRequestException("cannot update restaurant");
         }
-        return false;
     }
 
     public List<Restaurant> getAll() {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("FROM Restaurant", Restaurant.class)
-                .getResultList();
+        try {
+            return sessionFactory
+                    .getCurrentSession()
+                    .createQuery("FROM Restaurant", Restaurant.class)
+                    .getResultList();
+        } catch (RuntimeException ex) {
+            throw new DataNotFoundException("cannot find restaurants");
+        }
+    }
+
+    @Override
+    public List<Restaurant> getPaginatedRestaurant(PageModel pageModel) {
+            Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("From Restaurant",Restaurant.class);
+        query.setFirstResult(pageModel.getFirstResult()*pageModel.getMaxResult());
+        query.setMaxResults(pageModel.getMaxResult());
+        List<Restaurant> restaurantList = query.getResultList();
+        return restaurantList;
     }
 
     public Restaurant getRestaurantById(int id) {
@@ -89,5 +101,23 @@ public class RestaurantDAOImpl implements RestaurantDAO {
                         .setParameter("id", id)
                         .getSingleResult();
         return restaurant.isActive();
+    }
+
+    @Override
+    public Restaurant getRestaurantByName(String restaurantName) {
+        try {
+            return sessionFactory
+                    .getCurrentSession()
+                    .createQuery("FROM Restaurant where name= :restaurantName", Restaurant.class)
+                    .setParameter("restaurantName", restaurantName)
+                    .getSingleResult();
+        } catch (RuntimeException ex) {
+            throw new DataNotFoundException("cannot find restaurantName");
+        }
+    }
+
+    @Override
+    public long countRestaurant() {
+        return sessionFactory.getCurrentSession().createQuery("select count(1) from  Restaurant",Long.class).getSingleResult();
     }
 }

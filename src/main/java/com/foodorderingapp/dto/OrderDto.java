@@ -1,13 +1,20 @@
 package com.foodorderingapp.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDto {
 
     private int userId;
-    private boolean confirm;
-    private List<FoodQuantity> foodList=new ArrayList<FoodQuantity>();
+    private List<FoodQuantity> foodList=null;
+
+    public OrderDto(int userId, List<FoodQuantity> foodList) {
+        this.userId = userId;
+        this.foodList = foodList;
+    }
+
+    public OrderDto(){
+
+    }
 
     public int getUserId() {
         return userId;
@@ -23,13 +30,5 @@ public class OrderDto {
 
     public void setFoodList(List<FoodQuantity> foodList) {
         this.foodList = foodList;
-    }
-
-    public boolean isConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(boolean confirm) {
-        this.confirm = confirm;
     }
 }

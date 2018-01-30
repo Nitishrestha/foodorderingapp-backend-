@@ -1,17 +1,19 @@
 package com.foodorderingapp.serviceImpl;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("foodService")
+@Service
+@Transactional
 public class FoodServiceImpl implements FoodService{
-
 
     private final FoodDAO foodDAO;
     private final RestaurantDAO restaurantDAO;
@@ -49,7 +51,20 @@ public class FoodServiceImpl implements FoodService{
         return foodDAO.addFoodsToRestaurant(foodList);
     }
 
-    public Food getFoodByName(String foodName) {
-        return foodDAO.getFoodByName(foodName);
+    @Override
+    public Food getFoodByResName(String restaurantName, String foodName) {
+        return foodDAO.getFoodByResName(restaurantName,foodName);
     }
+
+
+    @Override
+    public List<Food> getPaginatedFood(PageModel pageModel, int id) {
+        return foodDAO.getPaginatedFood(pageModel,id);
+    }
+
+    @Override
+    public long countFood(int id) {
+        return foodDAO.countFood(id);
+    }
+
 }

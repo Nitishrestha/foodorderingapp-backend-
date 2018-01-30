@@ -1,62 +1,97 @@
+
 package com.foodorderingapp.test;
 
 import com.foodorderingapp.dao.UserDAO;
+import com.foodorderingapp.dto.UserDto;
 import com.foodorderingapp.model.User;
+import com.foodorderingapp.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 public class UserTest {
 
+    @Mock
+    private UserDAO userDAO;
 
-    private static AnnotationConfigApplicationContext context;
+    @InjectMocks
+    UserServiceImpl userService;
 
-    private static UserDAO userDAO;
-
-    private User user;
-
-    @BeforeClass
-    public static void init() {
-
-        context = new AnnotationConfigApplicationContext();
-        context.scan("com.foodorderingapp");
-        context.refresh();
-
-        userDAO = (UserDAO) context.getBean("userDAO");
-
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testAddOrder() {
+   public void testAdd(){
 
-        user = new User();
-
-        user.setFirstName("laxman");
+        User user=new User();
+        user.setFirstName("hari");
         user.setMiddleName("bahadur");
-        user.setLastName("pant");
+        user.setLastName("rai");
+        user.setUserPassword("hari");
+        user.setEmail("hari1@yahoo.com");
+        user.setAddress("ktm");
+        user.setContactNo("981615475");
+
+        UserDto dto=new UserDto();
+        dto.setEmail("hari@yahoo.com");
+
+        when(userDAO.getUserByEmailId(user.getEmail())).thenReturn(null);
+        when(userDAO.addUser(user)).thenReturn(user);
+        Assert.assertNotNull(userService.addUser(dto));
+    }
+
+    @Test
+    public void testGetList(){
+        List<User> userList=new ArrayList<>();
+
+        User user1=new User();
+        user1.setEmail("yy");
+        user1.setUserPassword("op");
+        userList.add(user1);
+
+        User user2=new User();
+        user2.setEmail("yy");
+        user2.setUserPassword("op");
+        userList.add(user2);
+
+        when(userDAO.getUsers()).thenReturn(userList);
+        Assert.assertEquals(userService.getUsers().size(),2);
+    }
+
+    @Test
+    public void testVerifyUser(){
+        User user=new User();
         user.setUserPassword("ram");
-        user.setEmail("gl");
-        user.setAddress("bkt");
-        user.setContactNo("914891841");
-        user.setBalance(5000);
-        user.setUserRole("user");
+        user.setEmail("rr");
 
-        User user1 = userDAO.getUserByEmailId(user);
-        if (user1 == null) {
-            Assert.assertEquals("Fail to add on User", true, userDAO.addUser(user));
-
-        } else if (user1 != null) {
-            throw new IllegalArgumentException("plz rewite email");
-        }
+        when(userDAO.getUserByEmail(user.getUserPassword(),user.getEmail())).thenReturn(user);
+        Assert.assertEquals(userService.verifyUser(user.getUserPassword(),user.getEmail()).getEmail(),user.getEmail());
     }
 
     @Test
     public void testGetUser(){
-
-        Assert.assertEquals("Fail to get on User",5,userDAO.getUsers());
+        User user=new User();
+        user.setUserId(1);
+        when(userDAO.getUser(user.getUserId())).thenReturn(user);
+        Assert.assertEquals(userService.getUser(user.getUserId()),user);
     }
 
-
+    @Test
+    public void testUpdateUser(){
+        User user=new User();
+        user.setUserId(1);
+        when(userDAO.getUser(user.getUserId())).thenReturn(user);
+        doNothing().when(userDAO).update(user);
+        Assert.assertEquals(userService.update(user),user);
+    }
 }

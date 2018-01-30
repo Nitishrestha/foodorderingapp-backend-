@@ -2,8 +2,11 @@ package com.foodorderingapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.foodorderingapp.model.Food;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,24 +22,40 @@ public class Restaurant implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurant_id")
+    @Column(name = "restaurant_id",nullable=false,updatable = false)
     private int id;
 
     @Column(name = "restaurant_name")
+    @NotNull(message = "please enter the restaurant name")
+    @Size(min=3,max=25)
     private String name;
 
     @Column(name = "restaurant_address")
+    @NotBlank(message = "please enter the restaurant address")
+    @Size(min=3,max=25)
     private String address;
 
     @Column(name = "restaurant_contact")
+    @NotBlank(message = "please enter the restaurant contact")
+    @Size(min=7,max=10)
     private String contact ;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Food> foodList = new ArrayList<Food>();
+    private List<Food> foodList =null;
 
     @Column(name = "status")
     private boolean isActive = true;
+
+    public Restaurant(String name, String address, String contact, List<Food> foodList) {
+        this.name = name;
+        this.address = address;
+        this.contact = contact;
+        this.foodList = foodList;
+    }
+
+    public Restaurant() {
+    }
 
     public boolean isActive() {
         return isActive;

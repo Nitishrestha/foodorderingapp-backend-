@@ -1,6 +1,6 @@
 package com.foodorderingapp.dto;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserListDto {
@@ -10,7 +10,8 @@ public class UserListDto {
     private String firstName;
     private String middleName;
     private String lastName;
-    private List<FoodRes> foodResList=new ArrayList<FoodRes>();
+    private Date orderedDate;
+    private List<FoodRes> foodResList=null;
 
     public int getUserId() {
         return userId;
@@ -58,5 +59,13 @@ public class UserListDto {
 
     public void setFoodResList(List<FoodRes> foodResList) {
         this.foodResList = foodResList;
+    }
+
+    public Date getOrderedDate() {
+        return orderedDate;
+    }
+
+    public void setOrderedDate(Date orderedDate) {
+        this.orderedDate = orderedDate;
     }
 }

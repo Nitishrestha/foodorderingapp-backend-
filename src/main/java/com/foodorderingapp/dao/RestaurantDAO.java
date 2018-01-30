@@ -1,5 +1,6 @@
 package com.foodorderingapp.dao;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.model.Restaurant;
 
 import java.util.List;
@@ -9,8 +10,11 @@ public interface RestaurantDAO {
     boolean deleteRestaurant(Restaurant restaurant);
     boolean updateRestaurant(Restaurant restaurant);
     List<Restaurant> getAll();
+    List<Restaurant> getPaginatedRestaurant(PageModel pageModel);
     Restaurant getRestaurantById(int id);
     int deactivate(int id);
     int activate(int id);
     boolean getStatus(int id);
+    Restaurant getRestaurantByName(String restaurantName);
+    long countRestaurant();
 }

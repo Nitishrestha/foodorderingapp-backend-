@@ -6,8 +6,7 @@ import com.foodorderingapp.model.OrderDetail;
 import java.util.List;
 
 public interface OrderDetailService {
-
+    OrderDetail add(OrderDetail orderDetail);
     List<OrderDetailDto> getOrderDetails();
-    List<OrderDetail> getByUserId(int userId);
-
+    List<OrderDetail> getOrderDetailByOrderId(int orderId);
 }

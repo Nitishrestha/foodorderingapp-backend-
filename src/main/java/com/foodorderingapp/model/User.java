@@ -1,21 +1,33 @@
 package com.foodorderingapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.internal.Nullable;
+import com.foodorderingapp.dto.UserListMapperDto;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name="tbl_users")
+@SqlResultSetMapping(
+        name="UserMapping",
+        classes =
+                {@ConstructorResult(targetClass = UserListMapperDto.class,
+                        columns = {
+                                @ColumnResult(name="order_id", type=Integer.class),
+                                @ColumnResult(name="user_id", type=Integer.class),
+                                @ColumnResult(name="first_name",type=String.class),
+                                @ColumnResult(name="middle_name",type=String.class),
+                                @ColumnResult(name="last_name" ,type=String.class),
+                                @ColumnResult(name="ordered_date",type=Date.class),
+                        })})
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name="user_id",nullable=false,updatable = false)
     private int userId;
+    @NotNull(message = "Can't be null.")
     @Column(name="first_name")
     private String firstName;
     @Column(name="middle_name")
@@ -33,9 +45,23 @@ public class User {
     @Column(name="user_role")
     private String userRole;
     @Column(name="balance")
-    private int balance;
+    private double balance = 1200;
 
+    public User(String firstName, String middleName, String lastName, String userPassword, String email, String contactNo, String address, String userRole, double balance) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.userPassword = userPassword;
+        this.email = email;
+        this.contactNo = contactNo;
+        this.address = address;
+        this.userRole = userRole;
+        this.balance = balance;
+    }
 
+    public User(){
+
+    }
 
     public int getUserId() {
         return userId;
@@ -52,7 +78,6 @@ public class User {
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
-
 
     public String getEmail() {
         return email;
@@ -110,12 +135,25 @@ public class User {
         this.contactNo = contactNo;
     }
 
-
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public int hashCode() {
+        return email != null ? email.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+        return email != null ? email.equals(user.email) : user.email == null;
     }
 }

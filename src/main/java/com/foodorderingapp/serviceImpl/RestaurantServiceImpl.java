@@ -1,10 +1,12 @@
 package com.foodorderingapp.serviceImpl;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.model.Restaurant;
 import com.foodorderingapp.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,7 +14,8 @@ import java.util.List;
  * Created by TOPSHI KREATS on 11/29/2017.
  */
 
-@Service("restaurantService")
+@Service
+@Transactional
 public class RestaurantServiceImpl implements RestaurantService {
 
 
@@ -41,6 +44,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<Restaurant> getAll() {
         return restaurantDAO.getAll();
     }
+
+    @Override
+    public List<Restaurant> getPaginatedRestaurant(PageModel pageModel) {
+        return restaurantDAO.getPaginatedRestaurant(pageModel);
+    }
+
     public Restaurant getRestaurantById(int id) {
         return restaurantDAO.getRestaurantById(id);
     }
@@ -65,5 +74,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public boolean getStatus(int id) {
         return restaurantDAO.getStatus(id);
+    }
+
+    @Override
+    public Restaurant getRestaurantByName(String restaurantName) {
+        return restaurantDAO.getRestaurantByName(restaurantName);
+    }
+    @Override
+    public  long countRestaurant(){
+        return  restaurantDAO.countRestaurant();
     }
 }

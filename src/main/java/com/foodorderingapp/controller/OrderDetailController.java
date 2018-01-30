@@ -1,19 +1,18 @@
 package com.foodorderingapp.controller;
 
 
+import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.dto.OrderDetailDto;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.service.OrderDetailService;
 import com.foodorderingapp.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/orderDetail")
+@RequestMapping(WebUrlConstant.OrderDetail.ORDER_DETAIL_API)
 public class OrderDetailController {
 
     private final OrderDetailService orderDetailService;
@@ -28,10 +27,5 @@ public class OrderDetailController {
     @GetMapping
     public List<OrderDetailDto> getOrderDetail() {
         return orderDetailService.getOrderDetails();
-    }
-
-    @GetMapping(value="{userId}")
-    public List<OrderDetail> getOrderDetailByUserId(@PathVariable("userId") int userId){
-        return orderDetailService.getByUserId(userId);
     }
 }

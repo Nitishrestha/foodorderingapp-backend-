@@ -4,7 +4,7 @@ public class FoodRes {
 
     private String foodName;
     private String restaurantName;
-    private int foodPrice;
+    private double foodPrice;
     private int quantity;
 
     public String getFoodName() {
@@ -23,11 +23,11 @@ public class FoodRes {
         this.restaurantName = restaurantName;
     }
 
-    public int getFoodPrice() {
+    public double getFoodPrice() {
         return foodPrice;
     }
 
-    public void setFoodPrice(int foodPrice) {
+    public void setFoodPrice(double foodPrice) {
         this.foodPrice = foodPrice;
     }
 

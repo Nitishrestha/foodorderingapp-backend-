@@ -1,5 +1,6 @@
 package com.foodorderingapp.controller;
 
+import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,7 @@ import java.util.List;
  * Created by TOPSHI KREATS on 11/29/2017.
  */
 @RestController
-@RequestMapping("/foods")
-@CrossOrigin
+@RequestMapping(WebUrlConstant.Food.FOOD_API)
 public class FoodController {
 
     private final FoodService foodService;
@@ -38,7 +38,6 @@ public class FoodController {
     //EDIT FOOD FROM ID
     @PutMapping("/{id}")
     public String updateFood(@RequestBody Food food,@PathVariable int id){
-        System.out.println(food);
         foodService.updateFood(food, id);
         return "Food updated successfully!";
     }
