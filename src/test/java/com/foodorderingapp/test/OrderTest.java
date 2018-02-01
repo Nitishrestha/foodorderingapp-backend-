@@ -42,7 +42,7 @@ public class OrderTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
-
+/*
     @Test
     public void testAdd(){
 
@@ -64,5 +64,5 @@ public class OrderTest {
         doNothing().when(userDAO).update(user);
         when(orderDetailDAO.add(anyObject())).thenReturn(orderDetail);
         Assert.assertNotNull(ordersService.add(orderDto));
-    }
+    }*/
 }

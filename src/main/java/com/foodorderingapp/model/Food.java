@@ -10,19 +10,21 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tbl_food")
-public class Food{
+public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "food_id",nullable=false,updatable = false)
+    @Column(name = "food_id", nullable = false, updatable = false)
     private int id;
-    @Column(name="food_name")
-    @NotBlank(message = "This field is required.")
-    @Size(min=4,max=15,message = "first name must be between 2 and 20.")
+
+    @Column(name = "food_name")
+    @NotBlank(message = "Food name is required!!!")
+    @Size(min = 3, max = 30, message = "food name must be between 3 and 30!!!")
     private String name;
+
     @Column(name = "food_price")
-    @NotBlank(message = "This field is required.")
     private double price;
+
     @ManyToOne
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "restaurant_id")
@@ -37,7 +39,7 @@ public class Food{
         this.restaurant = restaurant;
     }
 
-    public Food(){
+    public Food() {
 
     }
 
@@ -66,8 +68,8 @@ public class Food{
     }
 
     public Restaurant getRestaurant() {
-        if(this.restaurant==null){
-            this.restaurant=new Restaurant();
+        if (this.restaurant == null) {
+            this.restaurant = new Restaurant();
         }
         return restaurant;
     }
@@ -78,10 +80,10 @@ public class Food{
     }
 
     public int getRestaurantId() {
-      if(restaurantId==0){
-          return this.getRestaurant().getId();
-      }
-      return restaurantId;
+        if (restaurantId == 0) {
+            return this.getRestaurant().getId();
+        }
+        return restaurantId;
 
     }
 

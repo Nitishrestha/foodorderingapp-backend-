@@ -51,6 +51,8 @@ public class FoodController {
     //POST LIST OF FOODS
     @PostMapping
     public List<Food> addFoods(@RequestBody List<Food> foodList){
+
+        List<Food> foodList1 = foodList;
         return foodService.addFoodsToRestaurant(foodList);
     }
 }

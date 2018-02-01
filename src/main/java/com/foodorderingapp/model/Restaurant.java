@@ -26,18 +26,18 @@ public class Restaurant implements Serializable {
     private int id;
 
     @Column(name = "restaurant_name")
-    @NotNull(message = "please enter the restaurant name")
-    @Size(min=3,max=25)
+    @NotNull(message = "Please enter the restaurant's name!!!")
+    @Size(min=3,max=30,message = "Restaurant's name must be between 3 and 30!!!")
     private String name;
 
     @Column(name = "restaurant_address")
-    @NotBlank(message = "please enter the restaurant address")
-    @Size(min=3,max=25)
+    @NotBlank(message = "Please enter the restaurant's address!!!")
+    @Size(min=3,max=50, message = "Address must be between 3 and 50!!!")
     private String address;
 
     @Column(name = "restaurant_contact")
-    @NotBlank(message = "please enter the restaurant contact")
-    @Size(min=7,max=10)
+    @NotBlank(message = "Please enter the restaurant's contact!!!")
+    @Size(min=7,max=10, message = "Contact must be between 7 and  10!!!")
     private String contact ;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

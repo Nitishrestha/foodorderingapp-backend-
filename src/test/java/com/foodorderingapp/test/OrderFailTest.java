@@ -44,7 +44,7 @@ public class OrderFailTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = DataNotFoundException.class)
+    /*@Test(expected = DataNotFoundException.class)
     public void testAdd(){
 
         User user=new User();
@@ -65,5 +65,5 @@ public class OrderFailTest {
         doNothing().when(userDAO).update(user);
         when(orderDetailDAO.add(anyObject())).thenReturn(orderDetail);
         Assert.assertNull(ordersService.add(orderDto));
-    }
+    }*/
 }
