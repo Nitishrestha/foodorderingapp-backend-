@@ -38,6 +38,10 @@ public class FoodController {
         System.out.println("aaaaa");
     }
 
+    @GetMapping(value="/hello")
+    public String hello(){
+        return "hello";
+    }
     //EDIT FOOD FROM ID
     @PutMapping("/{id}")
     public String updateFood(@RequestBody Food food,@PathVariable int id){
