@@ -35,6 +35,10 @@ public class FoodController {
         return "Food has been deleted successfully a";
     }
 
+    @GetMapping(value="/hello")
+    public String hello(){
+        return "hello";
+    }
     //EDIT FOOD FROM ID
     @PutMapping("/{id}")
     public String updateFood(@RequestBody Food food,@PathVariable int id){
