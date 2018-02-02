@@ -74,12 +74,31 @@ public class RestaurantController {
         return id;
     }
 
-    @GetMapping(value = "/page/{firstResult}/{maxResult}")
-    public ResponseEntity<GenericResponse> getPaginatedRestaurant(@PathVariable int firstResult, @PathVariable int maxResult) {
+    @GetMapping(value = "admin/page/{firstResult}/{maxResult}")
+    public ResponseEntity<GenericResponse> getPaginatedRestaurantToAdmin(@PathVariable int firstResult, @PathVariable int maxResult) {
         PageModel pageModel = new PageModel();
         pageModel.setFirstResult(firstResult);
         pageModel.setMaxResult(maxResult);
-        List<Restaurant> restaurant = restaurantService.getPaginatedRestaurant(pageModel);
+        List<Restaurant> restaurant = restaurantService.getPaginatedRestaurantToAdmin(pageModel);
+        if (restaurant == null && restaurant.size() == 0) {
+            throw new DataNotFoundException("Record not found !!");
+        }
+
+        GenericResponse genericResponse = new GenericResponse();
+        genericResponse.setResponseData(restaurant);
+        genericResponse.setPageModel(pageModel);
+        long count = restaurantService.countRestaurant();
+        pageModel.setCount(count);
+        return new ResponseEntity<>(genericResponse, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/page/{firstResult}/{maxResult}")
+    public ResponseEntity<GenericResponse> getPaginatedRestaurantToUser(@PathVariable int firstResult, @PathVariable int maxResult) {
+        PageModel pageModel = new PageModel();
+        pageModel.setFirstResult(firstResult);
+        pageModel.setMaxResult(maxResult);
+        List<Restaurant> restaurant = restaurantService.getPaginatedRestaurantToUser(pageModel);
         if (restaurant == null && restaurant.size() == 0) {
             throw new DataNotFoundException("Record not found !!");
         }
@@ -93,14 +112,14 @@ public class RestaurantController {
     }
 
     @GetMapping(value = "/{id}/foods/{firstResult}/{maxResult}")
-    public ResponseEntity<GenericResponse> getPaginatedFood(@PathVariable int id,@PathVariable int firstResult, @PathVariable int maxResult) {
-        PageModel pageModel = new PageModel(firstResult,maxResult);
+    public ResponseEntity<GenericResponse> getPaginatedFood(@PathVariable int id, @PathVariable int firstResult, @PathVariable int maxResult) {
+        PageModel pageModel = new PageModel(firstResult, maxResult);
         List<Food> foodList = foodService.getPaginatedFood(pageModel, id);
         if (foodList == null && foodList.size() == 0) {
             throw new DataNotFoundException("Record not found !!");
         }
 
-        GenericResponse genericResponse = new GenericResponse(pageModel,foodList);
+        GenericResponse genericResponse = new GenericResponse(pageModel, foodList);
         long count = foodService.countFood(id);
         pageModel.setCount(count);
         return new ResponseEntity<>(genericResponse, HttpStatus.OK);

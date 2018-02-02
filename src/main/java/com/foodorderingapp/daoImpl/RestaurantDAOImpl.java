@@ -66,8 +66,18 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     }
 
     @Override
-    public List<Restaurant> getPaginatedRestaurant(PageModel pageModel) {
+    public List<Restaurant> getPaginatedRestaurantToUser(PageModel pageModel) {
             Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("From Restaurant WHERE isActive = true",Restaurant.class);
+        query.setFirstResult(pageModel.getFirstResult()*pageModel.getMaxResult());
+        query.setMaxResults(pageModel.getMaxResult());
+        List<Restaurant> restaurantList = query.getResultList();
+        return restaurantList;
+    }
+
+    @Override
+    public List<Restaurant> getPaginatedRestaurantToAdmin(PageModel pageModel) {
+        Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("From Restaurant",Restaurant.class);
         query.setFirstResult(pageModel.getFirstResult()*pageModel.getMaxResult());
         query.setMaxResults(pageModel.getMaxResult());

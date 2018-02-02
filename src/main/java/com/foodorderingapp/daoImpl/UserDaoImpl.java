@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDAO {
             sessionFactory.getCurrentSession().persist(user);
             return user;
         } catch (Exception ex) {
-            throw new DataNotFoundException("cannot add user");
+            throw new DataNotFoundException("cannot add user"+ex.getMessage());
         }
     }
 
@@ -41,22 +41,7 @@ public class UserDaoImpl implements UserDAO {
         return sessionFactory.getCurrentSession().get(User.class, userId);
     }
 
-    public User getUserByEmail(String userPassword,String email) {
-
-        try {
-            User user1 = sessionFactory
-                    .getCurrentSession()
-                    .createQuery("FROM User WHERE email=:email AND userPassword=:userPassword", User.class)
-                    .setParameter("email", email)
-                    .setParameter("userPassword", userPassword).getSingleResult();
-            return user1;
-        } catch (Exception ex) {
-            throw new DataNotFoundException("user not found");
-        }
-    }
-
     public User getUserByEmailId(String email) {
-
         try {
             User user1 = sessionFactory.getCurrentSession().
                     createQuery("FROM User WHERE email=:email", User.class).
@@ -71,8 +56,7 @@ public class UserDaoImpl implements UserDAO {
     public void update(User user) {
         sessionFactory.getCurrentSession().update(user);
     }
-
-    public List<UserListMapperDto> getByUserId(int userId) {
+        public List<UserListMapperDto> getByUserId(int userId) {
         Query qry = sessionFactory
                 .getCurrentSession()
                 .createNativeQuery("SELECT tbl_orders.order_id ,tbl_orders.ordered_date, tbl_users.first_name ," +

@@ -10,7 +10,8 @@ public interface RestaurantDAO {
     boolean deleteRestaurant(Restaurant restaurant);
     boolean updateRestaurant(Restaurant restaurant);
     List<Restaurant> getAll();
-    List<Restaurant> getPaginatedRestaurant(PageModel pageModel);
+    List<Restaurant> getPaginatedRestaurantToUser(PageModel pageModel);
+    List<Restaurant> getPaginatedRestaurantToAdmin(PageModel pageModel);
     Restaurant getRestaurantById(int id);
     int deactivate(int id);
     int activate(int id);

@@ -27,46 +27,24 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false, updatable = false)
+    @Column(name="user_id")
     private int userId;
-
-    @NotBlank(message = "First name is required!!!")
-    @Size(min = 3, max = 25, message = "First name must be between 3 and 25")
-    @Column(name = "first_name")
+    @Column(name="first_name")
     private String firstName;
-
     @Column(name = "middle_name")
-    @Size(min = 2, max = 25, message = "Middle name must be between 2 and 25")
     private String middleName;
-
     @Column(name = "last_name")
-    @NotBlank(message = "Last name is required!!!")
-    @Size(min = 3, max = 25, message = "Last name must be between 3 and 25")
     private String lastName;
-
     @Column(name = "user_password")
-    @Size(min = 5, max = 30, message = "First name must be between 5 and 30")
-    @NotBlank(message = "Password is required!!!")
     private String userPassword;
-
     @Column(name = "email")
-    @Size(min = 5, max = 40, message = "Email must be between 5 and 40")
-    @NotBlank(message = "Email is required!!!")
     private String email;
-
     @Column(name = "contact_no")
-    @NotBlank(message = "Contact number is required!!!")
-    @Size(min = 7, max = 10, message = "Contact number must be between 7 and 10")
     private String contactNo;
-
     @Column(name = "address")
-    @NotBlank(message = "Address is required!!!")
-    @Size(min = 3, max = 50, message = "First name must be between 3 and 50")
     private String address;
-
     @Column(name = "user_role")
-    private String userRole;
-
+    private String userRole="user";
     @Column(name = "balance")
     private double balance = 1200;
 

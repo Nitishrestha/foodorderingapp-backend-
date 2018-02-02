@@ -10,25 +10,27 @@ import javax.validation.constraints.Size;
 public class UserDto {
 
     private int userId;
-    @NotBlank(message = "This field is required.")
+
+    @NotBlank(message = "Password is required!!!")
+    @Size(min = 5, max = 70, message = "Password must be between 5 and 30")
     private String userPassword;
-    @NotBlank(message = "This field is required.")
+    @Size(min = 5, max = 40, message = "Email must be between 5 and 70")
+    @NotBlank(message = "Email is required!!!")
     @Email
     private String email;
     @NotBlank(message = "This field is required.")
-    @Size(min=3,max=40,message = "address must be between 3 and 40.")
+    @Size(min=3,max=50,message = "Address must be between 3 and 50.")
     private String address;
-    private String userRole;
-    @NotBlank(message = "This field is required.")
-    @Size(min=2,max=20,message = "first name must be between 2 and 20.")
+    @NotBlank(message = "First name is required!!!")
+    @Size(min = 3, max = 25, message = "First name must be between 3 and 25")
     private String firstName;
-    @Size(min=1,max=20,message = "middle name must be between 2 and 20.")
+    @Size(min = 2, max = 25, message = "Middle name must be between 2 and 25")
     private String middleName;
-    @NotBlank(message = "This field is required.")
-    @Size(min=2,max=20,message = "last name must be between 2 and 20.")
+    @NotBlank(message = "Last name is required!!!")
+    @Size(min = 3, max = 25, message = "Last name must be between 3 and 25")
     private String lastName;
-    @NotBlank(message = "This field is required.")
-    @Size(min=7,max=10,message = "middle name must be between 2 and 20.")
+    @NotBlank(message = "Contact number is required!!!")
+    @Size(min = 7, max = 10, message = "Contact number must be between 7 and 10")
     private String contactNo;
 
     public int getUserId() {
@@ -61,14 +63,6 @@ public class UserDto {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
     }
 
     public String getMiddleName() {

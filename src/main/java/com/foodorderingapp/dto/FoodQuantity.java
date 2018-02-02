@@ -7,12 +7,11 @@ import javax.validation.constraints.Size;
 public class FoodQuantity {
 
     @NotBlank(message = "This field is required.")
-    @Size(min=1,max=20,message = "food name must be between 2 and 20.")
+    @Size(min=3,max=30,message = "food name must be between 3 and 30.")
     private String foodName;
-    @NotBlank(message = "This field is required.")
     private double foodPrice;
     @NotBlank(message = "This field is required.")
-    @Size(min=1,max=10,message = "restaurant name must be between 2 and 20.")
+    @Size(min=3,max=30,message = "restaurant name must be between 3 and 30.")
     private String restaurantName;
     @NotBlank(message = "This field is required.")
     private int quantity;

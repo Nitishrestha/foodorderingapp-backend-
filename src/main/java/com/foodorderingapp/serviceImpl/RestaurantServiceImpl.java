@@ -22,8 +22,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantDAO restaurantDAO;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantDAO restaurantDAO){
-        this.restaurantDAO=restaurantDAO;
+    public RestaurantServiceImpl(RestaurantDAO restaurantDAO) {
+        this.restaurantDAO = restaurantDAO;
     }
 
     public Restaurant addRestaurant(Restaurant restaurant) {
@@ -35,19 +35,26 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public boolean updateRestaurant(Restaurant restaurant, int id) {
-        Restaurant restaurant1 =restaurantDAO.getRestaurantById(id);
+        Restaurant restaurant1 = restaurantDAO.getRestaurantById(id);
         restaurant1.setName(restaurant.getName());
         restaurant1.setAddress(restaurant.getAddress());
         restaurant1.setContact(restaurant.getContact());
         return restaurantDAO.updateRestaurant(restaurant1);
     }
+
     public List<Restaurant> getAll() {
         return restaurantDAO.getAll();
     }
 
     @Override
-    public List<Restaurant> getPaginatedRestaurant(PageModel pageModel) {
-        return restaurantDAO.getPaginatedRestaurant(pageModel);
+    public List<Restaurant> getPaginatedRestaurantToAdmin(PageModel pageModel) {
+        return restaurantDAO.getPaginatedRestaurantToAdmin(pageModel);
+    }
+
+
+    @Override
+    public List<Restaurant> getPaginatedRestaurantToUser(PageModel pageModel) {
+        return restaurantDAO.getPaginatedRestaurantToUser(pageModel);
     }
 
     public Restaurant getRestaurantById(int id) {
@@ -55,8 +62,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public int deactivate(int id) {
-        if(!restaurantDAO.getRestaurantById(id).equals(null)){
-            if(getStatus(id)!=false) {
+        if (!restaurantDAO.getRestaurantById(id).equals(null)) {
+            if (getStatus(id) != false) {
                 restaurantDAO.deactivate(id);
             }
         }
@@ -64,8 +71,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public int activate(int id) {
-        if(!restaurantDAO.getRestaurantById(id).equals(null)){
-            if(getStatus(id)!=true) {
+        if (!restaurantDAO.getRestaurantById(id).equals(null)) {
+            if (getStatus(id) != true) {
                 restaurantDAO.activate(id);
             }
         }
@@ -80,8 +87,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant getRestaurantByName(String restaurantName) {
         return restaurantDAO.getRestaurantByName(restaurantName);
     }
+
     @Override
-    public  long countRestaurant(){
-        return  restaurantDAO.countRestaurant();
+    public long countRestaurant() {
+        return restaurantDAO.countRestaurant();
     }
 }

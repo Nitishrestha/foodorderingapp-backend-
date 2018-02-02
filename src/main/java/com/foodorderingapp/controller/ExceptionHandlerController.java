@@ -5,6 +5,7 @@ import com.foodorderingapp.exception.BadRequestException;
 import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.exception.UnauthorizedExceptionHandler;
 import com.foodorderingapp.errormessage.ExceptionResponse;
+import com.foodorderingapp.exception.UserConflictException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -66,5 +67,12 @@ public class ExceptionHandlerController {
         }
         dataBindingErrorMessage.setErrors(errors);
         return dataBindingErrorMessage;
+    }
+    @ExceptionHandler(UserConflictException.class)
+    public ResponseEntity<ExceptionResponse> userExitException(final UserConflictException ex, final HttpServletRequest request) {
+        ExceptionResponse error = new ExceptionResponse();
+        error.setMessage(ex.getMessage());
+        error.setCallerUrl(request.getRequestURI());
+        return new ResponseEntity<ExceptionResponse>(error, HttpStatus.CONFLICT);
     }
 }
