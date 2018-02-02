@@ -32,7 +32,7 @@ public class FoodController {
     @DeleteMapping("/{id}")
     public String deleteFood(@PathVariable int id){
         foodService.deleteFood(foodService.getFoodById(id));
-        return "Food has been deleted successfully";
+        return "Food has been deleted successfully b";
     }
 
     //EDIT FOOD FROM ID
