@@ -34,6 +34,9 @@ public class FoodController {
         foodService.deleteFood(foodService.getFoodById(id));
         return "Food has been deleted successfully a";
     }
+    public void setString(){
+        System.out.println("aaaaa");
+    }
 
     //EDIT FOOD FROM ID
     @PutMapping("/{id}")
