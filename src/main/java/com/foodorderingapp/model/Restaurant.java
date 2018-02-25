@@ -47,7 +47,8 @@ public class Restaurant implements Serializable {
     @Column(name = "status")
     private boolean isActive = true;
 
-    public Restaurant(String name, String address, String contact, List<Food> foodList) {
+    public Restaurant(int id,String name, String address, String contact, List<Food> foodList) {
+        this.id=id;
         this.name = name;
         this.address = address;
         this.contact = contact;
@@ -103,6 +104,21 @@ public class Restaurant implements Serializable {
 
     public void setFoodList(List<Food> foodList) {
         this.foodList = foodList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Restaurant that = (Restaurant) o;
+
+        return name != null ? name.equals(that.name) : that.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
     }
 
     @Override

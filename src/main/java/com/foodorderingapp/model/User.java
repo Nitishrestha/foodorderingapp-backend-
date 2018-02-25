@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
+
 @Table(name="tbl_users")
 @SqlResultSetMapping(
         name="UserMapping",
@@ -21,6 +22,7 @@ import java.util.Date;
                                 @ColumnResult(name="last_name" ,type=String.class),
                                 @ColumnResult(name="ordered_date",type=Date.class),
                         })})
+
 public class User {
 
     @Id
@@ -43,11 +45,12 @@ public class User {
     @Column(name="address")
     private String address;
     @Column(name="user_role")
-    private String userRole;
+    private String userRole="user";
     @Column(name="balance")
     private double balance = 1200;
 
-    public User(String firstName, String middleName, String lastName, String userPassword, String email, String contactNo, String address, String userRole, double balance) {
+    public User(String firstName, String middleName, String lastName, String userPassword,
+                String email, String contactNo, String address, String userRole, double balance) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -63,44 +66,14 @@ public class User {
 
     }
 
+
+
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
     }
 
     public String getFirstName() {
@@ -127,12 +100,44 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getContactNo() {
         return contactNo;
     }
 
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
     public double getBalance() {
@@ -144,16 +149,20 @@ public class User {
     }
 
     @Override
-    public int hashCode() {
-        return email != null ? email.hashCode() : 0;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
+
+        if (userPassword != null ? !userPassword.equals(user.userPassword) : user.userPassword != null) return false;
         return email != null ? email.equals(user.email) : user.email == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userPassword != null ? userPassword.hashCode() : 0;
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
     }
 }

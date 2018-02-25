@@ -41,20 +41,6 @@ public class UserDaoImpl implements UserDAO {
         return sessionFactory.getCurrentSession().get(User.class, userId);
     }
 
-    public User getUserByEmail(String userPassword,String email) {
-
-        try {
-            User user1 = sessionFactory
-                    .getCurrentSession()
-                    .createQuery("FROM User WHERE email=:email AND userPassword=:userPassword", User.class)
-                    .setParameter("email", email)
-                    .setParameter("userPassword", userPassword).getSingleResult();
-            return user1;
-        } catch (Exception ex) {
-            throw new DataNotFoundException("user not found");
-        }
-    }
-
     public User getUserByEmailId(String email) {
 
         try {
@@ -62,14 +48,20 @@ public class UserDaoImpl implements UserDAO {
                     createQuery("FROM User WHERE email=:email", User.class).
                     setParameter("email", email).
                     getSingleResult();
+            System.out.println(user1);
             return user1;
         } catch (Exception e) {
             return null;
         }
     }
 
-    public void update(User user) {
-        sessionFactory.getCurrentSession().update(user);
+    public Boolean update(User user) {
+        try {
+            sessionFactory.getCurrentSession().update(user);
+            return true;
+        } catch (Exception e) {
+            return  false;
+        }
     }
 
     public List<UserListMapperDto> getByUserId(int userId) {
@@ -80,7 +72,7 @@ public class UserDaoImpl implements UserDAO {
                         "FROM tbl_orders\n" +
                         "INNER JOIN  tbl_users ON tbl_orders.user_id=tbl_users.user_id  \n" +
                         "WHERE tbl_orders.user_id=?\n" +
-                        "AND tbl_orders.confirm=true","UserMapping")
+                        "AND tbl_orders.confirm=true")
                 .setParameter(1, userId);
         return qry.getResultList();
     }

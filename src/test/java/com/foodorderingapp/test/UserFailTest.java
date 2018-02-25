@@ -3,6 +3,7 @@ package com.foodorderingapp.test;
 import com.foodorderingapp.dao.UserDAO;
 import com.foodorderingapp.dto.UserDto;
 import com.foodorderingapp.exception.DataNotFoundException;
+import com.foodorderingapp.exception.UserConflictException;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
@@ -11,8 +12,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +23,10 @@ public class UserFailTest {
 
     @Mock
     private UserDAO userDAO;
+
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
+
 
     @InjectMocks
     UserServiceImpl userService;
@@ -29,7 +36,7 @@ public class UserFailTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = DataNotFoundException.class)
+    @Test(expected = UserConflictException.class)
     public void testFailToAdd(){
         User user=new User();
         user.setEmail("hari1@yahoo.com");
@@ -39,7 +46,7 @@ public class UserFailTest {
 
         when(userDAO.getUserByEmailId(user.getEmail())).thenReturn(new User());
         when(userDAO.addUser(user)).thenReturn(user);
-        assertNull(userService.addUser(dto));
+        Assert.assertNull(userService.addUser(dto));
     }
 
     @Test(expected = DataNotFoundException.class)
@@ -47,8 +54,15 @@ public class UserFailTest {
         User user=new User();
         user.setUserPassword("ram");
         user.setEmail("rr");
-        when(userDAO.getUserByEmail(user.getUserPassword(),user.getEmail())).thenReturn(null);
-        Assert.assertEquals(userService.verifyUser(user.getUserPassword(),user.getEmail()).getEmail(),user.getEmail());
+        when(userDAO.getUserByEmailId(user.getEmail())).thenReturn(null);
+        when(passwordEncoder.matches(anyString(),anyString())).thenReturn(true);
+        userService.verifyUser(user.getUserPassword(),user.getEmail());
+    }
+
+    @Test(expected = DataNotFoundException.class)
+    public void failTestGetUsers(){
+        when(userDAO.getUsers()).thenReturn(null);
+        userService.getUsers();
     }
 
     @Test(expected = DataNotFoundException.class)
@@ -56,7 +70,7 @@ public class UserFailTest {
         User user=new User();
         user.setUserId(1);
         when(userDAO.getUser(user.getUserId())).thenReturn(null);
-        Assert.assertNull(userService.getUser(user.getUserId()));
+        userService.getUser(user.getUserId());
     }
 
     @Test(expected = DataNotFoundException.class)
@@ -65,6 +79,5 @@ public class UserFailTest {
         user.setUserId(1);
         when(userDAO.getUser(user.getUserId())).thenReturn(null);
         doNothing().when(userDAO).update(user);
-        Assert.assertNull(userService.getUser(user.getUserId()));
-    }
+        userService.getUser(user.getUserId()); }
 }

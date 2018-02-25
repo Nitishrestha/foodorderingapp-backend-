@@ -18,7 +18,6 @@ public class UserDto {
     @NotBlank(message = "This field is required.")
     @Size(min=3,max=40,message = "address must be between 3 and 40.")
     private String address;
-    private String userRole;
     @NotBlank(message = "This field is required.")
     @Size(min=2,max=20,message = "first name must be between 2 and 20.")
     private String firstName;
@@ -63,14 +62,6 @@ public class UserDto {
         this.address = address;
     }
 
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
-    }
-
     public String getMiddleName() {
         return middleName;
     }
@@ -103,4 +94,18 @@ public class UserDto {
         this.firstName = firstName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserDto userDto = (UserDto) o;
+
+        return email != null ? email.equals(userDto.email) : userDto.email == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return email != null ? email.hashCode() : 0;
+    }
 }

@@ -12,5 +12,5 @@ public interface OrdersService {
     BillDto add(OrderDto orderDto);
     List<OrderListDto> getOrder();
     Orders update(int orderId);
-    List<UserListDto> getByUserId(int userId);
+    List<UserListDto> getUsersByUserId(int userId);
 }

@@ -4,6 +4,7 @@ import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.dto.*;
 import com.foodorderingapp.exception.DataNotFoundException;
+import com.foodorderingapp.exception.UserConflictException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.model.Orders;
@@ -30,7 +31,8 @@ public class OrdersServiceImpl implements OrdersService {
     private final OrderDetailService orderDetailService;
 
     @Autowired
-    public OrdersServiceImpl(UserService userService,FoodService foodService,OrderDAO orderDAO,OrderDetailService orderDetailService){
+    public OrdersServiceImpl(UserService userService,FoodService foodService,OrderDAO orderDAO,
+                             OrderDetailService orderDetailService){
         this.userService=userService;
         this.foodService=foodService;
         this.orderDAO=orderDAO;
@@ -47,6 +49,7 @@ public class OrdersServiceImpl implements OrdersService {
             throw new DataNotFoundException("user not found.");
         }
         Orders orders = new Orders();
+
         orders.setUser(user);
         orders.setConfirm(false);
         orderDAO.add(orders);
@@ -59,12 +62,15 @@ public class OrdersServiceImpl implements OrdersService {
             orderDetail.setRestaurantName(foodQuantity.getRestaurantName());
             orderDetail.setFoodPrice(foodQuantity.getFoodPrice());
             Food food=foodService.getFoodByResName(foodQuantity.getRestaurantName(),foodQuantity.getFoodName());
-            if(foodQuantity.getFoodPrice()!=food.getPrice()){
-                throw new DataNotFoundException("price not found");
+            if(food==null){
+                throw new DataNotFoundException("cannot find food");
+            }
+            else if(foodQuantity.getFoodPrice()!=food.getPrice()){
+                throw new UserConflictException("price not found");
             }
 
-            if(foodQuantity.getQuantity()<=0){
-                throw new DataNotFoundException(" quantity should be greater than 0");
+           else if(foodQuantity.getQuantity()<=0){
+                throw new UserConflictException(" quantity should be greater than 0");
             }
             foodList.add(food);
             double amount=foodQuantity.getQuantity()*foodQuantity.getFoodPrice();
@@ -80,10 +86,11 @@ public class OrdersServiceImpl implements OrdersService {
 
     public List<OrderListDto> getOrder() {
 
-        try{
             List<OrderListMapperDto> orderListMapperDtoList=orderDAO.getOrders();
+            if(orderListMapperDtoList==null || orderListMapperDtoList.size()==0){
+                throw new DataNotFoundException("cannot find order.");
+            }
             List<OrderListDto> orderListDtoList=new ArrayList<OrderListDto>();
-
             for(OrderListMapperDto orderListMapperDto:orderListMapperDtoList){
                 OrderListDto orderListDto=new OrderListDto();
                 List<FoodRes> foodResList=new ArrayList();
@@ -91,7 +98,9 @@ public class OrdersServiceImpl implements OrdersService {
                 orderListDto.setUserId(orderListMapperDto.getUserId());
                 orderListDto.setOrderedDate(orderListMapperDto.getOrderedDate());
                 List<OrderDetail> orderDetailList=orderDetailService.getOrderDetailByOrderId(orderListMapperDto.getOrderId());
-
+                if(orderDetailList==null || orderDetailList.size()==0){
+                    throw new DataNotFoundException("cannot find orderDetailList.");
+                }
                 for(OrderDetail orderDetail:orderDetailList){
                     foodResList.add(FoodResUtil.addFoodRes(orderDetail));
                     orderListDto.setFoodResList(foodResList);
@@ -99,17 +108,17 @@ public class OrdersServiceImpl implements OrdersService {
                 orderListDtoList.add(orderListDto);
             }
             return  orderListDtoList;
-        }catch(RuntimeException e){
-            throw new DataNotFoundException("Cannot find order list");
         }
-    }
-    public List<UserListDto> getByUserId(int userId) {
 
-        try {
-            List<UserListMapperDto> userListMapperDtos = userService.getByUserId(userId);
+    public List<UserListDto> getUsersByUserId(int userId) {
+
+        List<UserListMapperDto> userListMapperDtos = userService.getByUserId(userId);
+        if(userListMapperDtos==null || userListMapperDtos.size()==0){
+                throw new UserConflictException("cannot find user.");
+            }
             List<UserListDto> userListDtoList = new ArrayList<>();
 
-            for (UserListMapperDto userListMapperDto : userListMapperDtos) {
+        for (UserListMapperDto userListMapperDto : userListMapperDtos) {
                 UserListDto userListDto = new UserListDto();
                 List<FoodRes> foodResList = new ArrayList<>();
                 userListDto.setUserId(userListMapperDto.getUserId());
@@ -119,7 +128,9 @@ public class OrdersServiceImpl implements OrdersService {
                 userListDto.setLastName(userListMapperDto.getLastName());
                 userListDto.setOrderedDate(userListMapperDto.getOrderedDate());
                 List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailByOrderId(userListMapperDto.getOrderId());
-
+                if(orderDetailList==null || orderDetailList.size()==0){
+                    throw new DataNotFoundException("cannot find orderDetailList.");
+                }
                 for (OrderDetail orderDetail : orderDetailList) {
                     foodResList.add(FoodResUtil.addFoodRes(orderDetail));
                     userListDto.setFoodResList(foodResList);
@@ -128,13 +139,13 @@ public class OrdersServiceImpl implements OrdersService {
             }
             return userListDtoList;
         }
-        catch (Exception e) {
-            throw new DataNotFoundException("Cannot find order list");
-        }
-    }
+
 
     public Orders update(int orderId) {
         Orders orders1=orderDAO.getOrder(orderId);
+        if(orders1==null){
+            throw new DataNotFoundException("cannot find order.");
+        }
         orders1.setConfirm(true);
         orderDAO.update(orders1);
         return orders1;

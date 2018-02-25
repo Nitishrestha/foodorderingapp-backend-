@@ -14,6 +14,10 @@ public class OrderListMapperDto {
         this.orderedDate = orderedDate;
     }
 
+    public OrderListMapperDto(){
+
+    }
+
     public int getOrderId() {
         return orderId;
     }

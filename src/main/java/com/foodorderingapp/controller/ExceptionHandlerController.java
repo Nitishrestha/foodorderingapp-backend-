@@ -2,6 +2,7 @@ package com.foodorderingapp.controller;
 
 import com.foodorderingapp.errormessage.DataBindingErrorMessage;
 import com.foodorderingapp.exception.BadRequestException;
+import com.foodorderingapp.exception.UserConflictException;
 import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.exception.UnauthorizedExceptionHandler;
 import com.foodorderingapp.errormessage.ExceptionResponse;
@@ -28,6 +29,14 @@ public class ExceptionHandlerController {
         return new ResponseEntity<ExceptionResponse>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(UserConflictException.class)
+    public ResponseEntity<ExceptionResponse> userExitException(final UserConflictException ex, final HttpServletRequest request) {
+        ExceptionResponse error = new ExceptionResponse();
+        error.setMessage(ex.getMessage());
+        error.setCallerUrl(request.getRequestURI());
+        return new ResponseEntity<ExceptionResponse>(error, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<ExceptionResponse> userNotFoundException(final DataNotFoundException ex, final HttpServletRequest request) {
         ExceptionResponse error = new ExceptionResponse();
@@ -45,17 +54,17 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public DataBindingErrorMessage handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<DataBindingErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         exception.printStackTrace();
-        return dataBindingErrorMessagesConverter(exception.getBindingResult());
+        DataBindingErrorMessage dataBindingErrorMessage=dataBindingErrorMessagesConverter(exception.getBindingResult());
+         return new ResponseEntity<DataBindingErrorMessage>(dataBindingErrorMessage, HttpStatus.BAD_REQUEST);
     }
 
     public DataBindingErrorMessage dataBindingErrorMessagesConverter(BindingResult bindingResult) {
         DataBindingErrorMessage dataBindingErrorMessage = new DataBindingErrorMessage();
-        dataBindingErrorMessage.setCode(HttpStatus.BAD_REQUEST.value());
         dataBindingErrorMessage.setErrorMessage("Invalid request parameter");
+        dataBindingErrorMessage.setCode(HttpStatus.BAD_REQUEST.value());
         List<DataBindingErrorMessage.Error> errors = new ArrayList<>();
-
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         for(FieldError fieldError:fieldErrors){
             DataBindingErrorMessage.Error error = dataBindingErrorMessage.new Error();

@@ -5,9 +5,12 @@ import com.foodorderingapp.dto.LoginDto;
 import com.foodorderingapp.dto.UserDto;
 import com.foodorderingapp.dto.UserListMapperDto;
 import com.foodorderingapp.exception.DataNotFoundException;
+import com.foodorderingapp.exception.UserConflictException;
 import com.foodorderingapp.model.User;
 import com.foodorderingapp.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,72 +21,74 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO,BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder=passwordEncoder;
         this.userDAO = userDAO;
+
     }
 
     public User addUser(UserDto userDto) {
 
-
         User user1 = userDAO.getUserByEmailId(userDto.getEmail());
-        if (user1 != null) {
-            throw new DataNotFoundException("plz rewite email");
-
-        } else if(user1==null) {
+        if (user1 == null) {
             User user = new User();
             user.setFirstName(userDto.getFirstName());
             user.setMiddleName(userDto.getMiddleName());
             user.setLastName(userDto.getLastName());
             user.setContactNo(userDto.getContactNo());
-            user.setUserPassword(userDto.getUserPassword());
+            user.setUserPassword(passwordEncoder.encode(userDto.getUserPassword()));
             user.setAddress(userDto.getAddress());
             user.setEmail(userDto.getEmail());
-            user.setUserRole("user");
             userDAO.addUser(user);
             return user;
+        } else {
+            throw new UserConflictException("user already exit.");
         }
-        return user1;
     }
 
     public List<User> getUsers() {
-        return userDAO.getUsers();
+        List<User> userList= userDAO.getUsers();
+        if(userList==null || userList.size()==0){
+            throw new DataNotFoundException("cannot find userList.");
+        }else{
+            return userList;
+        }
     }
 
     public LoginDto verifyUser(String userPassword,String email) {
 
-        User user1 = userDAO.getUserByEmail(userPassword,email);
-
-        if (user1 == null) {
-            throw new DataNotFoundException("user not exits");
+        User user = userDAO.getUserByEmailId(email);
+        if (user == null) {
+            throw new DataNotFoundException("email not found.");
+        } else if (passwordEncoder.matches(userPassword, user.getUserPassword())) {
+            LoginDto loginDto = new LoginDto();
+            BeanUtils.copyProperties(user, loginDto);
+            System.out.println(loginDto);
+            return loginDto;
         } else {
-            LoginDto loginDto1 = new LoginDto();
-            loginDto1.setId(user1.getUserId());
-            loginDto1.setFirstName(user1.getFirstName());
-            loginDto1.setMiddleName(user1.getMiddleName());
-            loginDto1.setLastName(user1.getLastName());
-            loginDto1.setContactNo(user1.getContactNo());
-            loginDto1.setEmail(user1.getEmail());
-            loginDto1.setAddress(user1.getAddress());
-            loginDto1.setUserRole(user1.getUserRole());
-            loginDto1.setBalance(user1.getBalance());
-
-            return loginDto1;
+            throw new UserConflictException("userpassword didnt match.");
         }
     }
 
     public User getUser(int userId) {
         User user= userDAO.getUser(userId);
         if(user==null){
-            throw new DataNotFoundException("user not found");
+            throw new DataNotFoundException("user not found.");
         }
         return user;
     }
 
     public User update(User user) {
-        userDAO.update(user);
-        return user;
+
+        if(userDAO.update(user)==true) {
+            return user;
+        }else{
+            throw new UserConflictException("cannot update user.");
+        }
+
     }
 
     @Override

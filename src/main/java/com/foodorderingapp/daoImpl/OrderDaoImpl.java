@@ -4,6 +4,8 @@ import com.foodorderingapp.dao.OrderDAO;
 import com.foodorderingapp.dao.OrderDetailDAO;
 import com.foodorderingapp.dto.OrderListMapperDto;
 import com.foodorderingapp.exception.BadRequestException;
+import com.foodorderingapp.exception.DataNotFoundException;
+import com.foodorderingapp.exception.UserConflictException;
 import com.foodorderingapp.model.Orders;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -40,18 +42,22 @@ public class OrderDaoImpl implements OrderDAO{
                 "from tbl_orders where tbl_orders.confirm=false","OrderMapping");
         return qry.getResultList();
     }
-    public void update(Orders orders) {
-        sessionFactory.getCurrentSession().update(orders);
+
+    public Boolean update(Orders orders) {
+        try {
+            sessionFactory.getCurrentSession().update(orders);
+            return true;
+        } catch (Exception ex) {
+            throw  new UserConflictException("cannot update order.");
+        }
     }
 
     public Orders getOrder(int orderId) {
-        return  sessionFactory.getCurrentSession().get(Orders.class,orderId);
+        try {
+            Orders orders = sessionFactory.getCurrentSession().get(Orders.class, orderId);
+            return orders;
+        } catch (Exception ex) {
+            throw new DataNotFoundException("cannot find order");
+        }
     }
-
-
-    /*public List<Orders> getOrderByUser(int userId) {
-        return sessionFactory.getCurrentSession().
-                createQuery("FROM Orders where userId=:userId",Orders.class).
-                setParameter("userId",userId).getResultList();
-    }*/
 }

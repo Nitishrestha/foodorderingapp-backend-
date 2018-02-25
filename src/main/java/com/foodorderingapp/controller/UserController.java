@@ -32,18 +32,20 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> userList= userService.getUsers();
+        return new ResponseEntity(userList , HttpStatus.OK);
     }
 
     @PostMapping(value = "/verify")
-    public LoginDto verifyUser(@RequestBody @Valid LoginDto loginDto) {
+    public ResponseEntity<LoginDto> verifyUser(@RequestBody @Valid LoginDto loginDto) {
         LoginDto loginDto1 = userService.verifyUser(loginDto.getUserPassword(), loginDto.getEmail());
-        return loginDto1;
+        return new ResponseEntity(loginDto1 , HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}")
-    public User getUser(@PathVariable("userId") int userId) {
-            return userService.getUser(userId);
+    public ResponseEntity<User> getUser(@PathVariable("userId") int userId) {
+        User user=userService.getUser(userId);
+        return new ResponseEntity(user , HttpStatus.OK);
     }
 }

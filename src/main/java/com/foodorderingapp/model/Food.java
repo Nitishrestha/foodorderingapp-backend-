@@ -31,7 +31,8 @@ public class Food{
 
     private transient int restaurantId;
 
-    public Food(String name, double price, Restaurant restaurant) {
+    public Food(int id,String name, double price, Restaurant restaurant) {
+        this.id=id;
         this.name = name;
         this.price = price;
         this.restaurant = restaurant;

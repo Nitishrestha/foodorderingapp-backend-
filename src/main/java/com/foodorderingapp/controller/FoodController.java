@@ -4,6 +4,8 @@ import com.foodorderingapp.commons.WebUrlConstant;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,33 +26,36 @@ public class FoodController {
 
     //GET ALL FOODS
     @GetMapping
-    public List<Food> allFood(){
-        return foodService.getAll();
+    public ResponseEntity<List<Food>> allFood(){
+        List<Food> foodList= foodService.getAll();
+        return new ResponseEntity<List<Food>>(foodList, HttpStatus.OK);
     }
 
     //DELETE FOOD FROM ID
     @DeleteMapping("/{id}")
-    public String deleteFood(@PathVariable int id){
+    public ResponseEntity<String> deleteFood(@PathVariable int id){
         foodService.deleteFood(foodService.getFoodById(id));
-        return "Food has been deleted successfully";
+        return new ResponseEntity<String>("Food has been deleted successfully",HttpStatus.OK);
     }
 
     //EDIT FOOD FROM ID
     @PutMapping("/{id}")
-    public String updateFood(@RequestBody Food food,@PathVariable int id){
+    public ResponseEntity<String> updateFood(@RequestBody Food food,@PathVariable int id){
         foodService.updateFood(food, id);
-        return "Food updated successfully!";
+        return new ResponseEntity<String>("Food updated successfully!",HttpStatus.OK) ;
     }
 
     //GET FOOD FROM ID
     @GetMapping(value = "/{id}")
-    public Food getFoodBydId(@PathVariable int id){
-        return foodService.getFoodById(id);
+    public ResponseEntity<Food> getFoodBydId(@PathVariable int id){
+        Food food= foodService.getFoodById(id);
+        return new ResponseEntity<Food>(food,HttpStatus.OK);
     }
 
     //POST LIST OF FOODS
     @PostMapping
-    public List<Food> addFoods(@RequestBody List<Food> foodList){
-        return foodService.addFoodsToRestaurant(foodList);
+    public ResponseEntity<List<Food>> addFoods(@RequestBody List<Food> foodList){
+        List<Food> foodList1=foodService.addFoodsToRestaurant(foodList);
+        return new ResponseEntity<List<Food>>(foodList1,HttpStatus.OK);
     }
 }

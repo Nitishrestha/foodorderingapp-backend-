@@ -6,11 +6,10 @@ import com.foodorderingapp.model.User;
 import java.util.List;
 
 public interface UserDAO {
-     User addUser(User user);
-     List<User> getUsers();
-     User getUser(int userId);
-    User getUserByEmail(String userPassword,String email);
+    User addUser(User user);
+    List<User> getUsers();
+    User getUser(int userId);
     List<UserListMapperDto> getByUserId(int userId);
     User getUserByEmailId(String email);
-    void update(User user);
+    Boolean update(User user);
 }

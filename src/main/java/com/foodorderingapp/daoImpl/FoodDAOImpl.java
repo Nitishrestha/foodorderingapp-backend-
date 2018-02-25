@@ -1,12 +1,15 @@
 package com.foodorderingapp.daoImpl;
 
+import com.foodorderingapp.commons.PageModel;
 import com.foodorderingapp.dao.FoodDAO;
 import com.foodorderingapp.dao.RestaurantDAO;
 import com.foodorderingapp.exception.BadRequestException;
 import com.foodorderingapp.exception.DataNotFoundException;
 import com.foodorderingapp.model.Food;
 import com.foodorderingapp.model.Restaurant;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -50,8 +53,13 @@ public class FoodDAOImpl implements FoodDAO {
     }
 
     public Food getFoodById(int id) {
-        return sessionFactory.getCurrentSession().get(Food.class, id);
+            if(sessionFactory.getCurrentSession().get(Food.class, id)==null){
+                throw new DataNotFoundException("cannot find food");
+            }else{
+                return  sessionFactory.getCurrentSession().get(Food.class, id);
+            }
     }
+
 
     public List<Food> getFoodByRestaurantId(int id) {
         String query = "FROM Food WHERE restaurant= :restaurant";
@@ -92,5 +100,23 @@ public class FoodDAOImpl implements FoodDAO {
         } catch (Exception e) {
             throw new DataNotFoundException("foodName or restaurant is not in the list");
         }
+    }
+
+    @Override
+    public List<Food> getPaginatedFood(PageModel pageModel, int id) {
+       Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Food where restaurant.id = :id",Food.class)
+                        .setParameter("id",id);
+
+        query.setFirstResult(pageModel.getFirstResult()* pageModel.getMaxResult());
+        List<Food> foodList = query.getResultList();
+        return foodList;
+    }
+
+    @Override
+    public long countFood(int id) {
+        return  sessionFactory.getCurrentSession().createQuery("select count(1) from Food where restaurant.id = :id",Long.class)
+                .setParameter("id",id)
+                .getSingleResult();
     }
 }

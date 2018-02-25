@@ -42,6 +42,17 @@ public class OrderDetail {
     private Orders orders;
 
 
+    public OrderDetail(String foodName, double foodPrice, String restaurantName, int quantity) {
+        this.foodName = foodName;
+        this.foodPrice = foodPrice;
+        this.restaurantName = restaurantName;
+        this.quantity = quantity;
+    }
+
+    public OrderDetail(){
+
+    }
+
     public int getOrderDetailId() {
         return orderDetailId;
     }
@@ -88,5 +99,21 @@ public class OrderDetail {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderDetail that = (OrderDetail) o;
+
+        return Double.compare(that.foodPrice, foodPrice) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        long temp = Double.doubleToLongBits(foodPrice);
+        return (int) (temp ^ (temp >>> 32));
     }
 }

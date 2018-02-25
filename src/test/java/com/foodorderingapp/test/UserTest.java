@@ -11,9 +11,12 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +24,9 @@ public class UserTest {
 
     @Mock
     private UserDAO userDAO;
+
+    @Mock
+    private  BCryptPasswordEncoder passwordEncoder;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -38,6 +44,7 @@ public class UserTest {
         user.setMiddleName("bahadur");
         user.setLastName("rai");
         user.setUserPassword("hari");
+
         user.setEmail("hari1@yahoo.com");
         user.setAddress("ktm");
         user.setContactNo("981615475");
@@ -74,7 +81,8 @@ public class UserTest {
         user.setUserPassword("ram");
         user.setEmail("rr");
 
-        when(userDAO.getUserByEmail(user.getUserPassword(),user.getEmail())).thenReturn(user);
+        when(userDAO.getUserByEmailId(user.getEmail())).thenReturn(user);
+        when(passwordEncoder.matches(anyString(),anyString())).thenReturn(true);
         Assert.assertEquals(userService.verifyUser(user.getUserPassword(),user.getEmail()).getEmail(),user.getEmail());
     }
 
@@ -91,7 +99,6 @@ public class UserTest {
         User user=new User();
         user.setUserId(1);
         when(userDAO.getUser(user.getUserId())).thenReturn(user);
-        doNothing().when(userDAO).update(user);
         Assert.assertEquals(userService.update(user),user);
     }
 }

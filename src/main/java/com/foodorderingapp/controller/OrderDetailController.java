@@ -7,6 +7,8 @@ import com.foodorderingapp.model.OrderDetail;
 import com.foodorderingapp.service.OrderDetailService;
 import com.foodorderingapp.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,9 @@ public class OrderDetailController {
     }
 
     @GetMapping
-    public List<OrderDetailDto> getOrderDetail() {
-        return orderDetailService.getOrderDetails();
+    public ResponseEntity<List<OrderDetailDto>> getOrderDetail()
+    {
+        List<OrderDetailDto> orderDetailDtoList=orderDetailService.getOrderDetails();
+        return new ResponseEntity<List<OrderDetailDto>>(orderDetailDtoList, HttpStatus.OK);
     }
 }

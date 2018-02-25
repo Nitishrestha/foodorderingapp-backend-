@@ -1,10 +1,8 @@
 package com.foodorderingapp.dto;
 
-import javax.persistence.Column;
-
 public class LoginDto {
 
-    private int id;
+    private int userId;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -13,7 +11,27 @@ public class LoginDto {
     private String contactNo;
     private String address;
     private String userRole;
+
+    public LoginDto(){
+
+    }
+
+    public LoginDto(String userPassword, String email, String userRole, double balance) {
+        this.userPassword = userPassword;
+        this.email = email;
+        this.userRole = userRole;
+        this.balance = balance;
+    }
+
     private double balance;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getMiddleName() {
         return middleName;
@@ -63,15 +81,6 @@ public class LoginDto {
         this.balance = balance;
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -79,7 +88,6 @@ public class LoginDto {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
 
     public String getEmail() {
         return email;
@@ -95,5 +103,40 @@ public class LoginDto {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LoginDto loginDto = (LoginDto) o;
+
+        if (userPassword != null ? !userPassword.equals(loginDto.userPassword) : loginDto.userPassword != null)
+            return false;
+        return email != null ? email.equals(loginDto.email) : loginDto.email == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userPassword != null ? userPassword.hashCode() : 0;
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginDto{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", email='" + email + '\'' +
+                ", contactNo='" + contactNo + '\'' +
+                ", address='" + address + '\'' +
+                ", userRole='" + userRole + '\'' +
+                ", balance=" + balance +
+                '}';
     }
 }

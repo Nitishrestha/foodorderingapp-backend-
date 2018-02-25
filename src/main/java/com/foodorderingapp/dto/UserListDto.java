@@ -68,4 +68,19 @@ public class UserListDto {
     public void setOrderedDate(Date orderedDate) {
         this.orderedDate = orderedDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserListDto that = (UserListDto) o;
+
+        return userId == that.userId;
+    }
+
+    @Override
+    public int hashCode() {
+        return userId;
+    }
 }

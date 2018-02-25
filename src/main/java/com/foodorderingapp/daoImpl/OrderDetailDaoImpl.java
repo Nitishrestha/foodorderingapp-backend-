@@ -41,7 +41,8 @@ public class OrderDetailDaoImpl implements OrderDetailDAO {
     }
 
     public List<OrderDetail> getOrderDetailByOrderId(int orderId) {
-        return sessionFactory.getCurrentSession().createQuery("FROM OrderDetail where orders.orderId=:orderId",OrderDetail.class).
-                setParameter("orderId",orderId).getResultList();
+        Query query= sessionFactory.getCurrentSession().createQuery("FROM OrderDetail where orders.orderId=:orderId",OrderDetail.class).
+                setParameter("orderId",orderId);
+      return  query.getResultList();
     }
 }

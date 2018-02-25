@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class OrderDetailDto {
 
-
     private int orderId;
     private String firstName;
     private String middleName;
@@ -96,7 +95,6 @@ public class OrderDetailDto {
         this.foodName = foodName;
     }
 
-
     public String getRestaurantName() {
         return restaurantName;
     }
@@ -105,5 +103,18 @@ public class OrderDetailDto {
         this.restaurantName = restaurantName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        OrderDetailDto that = (OrderDetailDto) o;
+
+        return firstName != null ? firstName.equals(that.firstName) : that.firstName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return firstName != null ? firstName.hashCode() : 0;
+    }
 }

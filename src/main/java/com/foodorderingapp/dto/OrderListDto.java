@@ -11,6 +11,17 @@ public class OrderListDto {
     private List<FoodRes> foodResList=null;
     private Date orderedDate;
 
+    public OrderListDto(int orderId, int userId, List<FoodRes> foodResList, Date orderedDate) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.foodResList = foodResList;
+        this.orderedDate = orderedDate;
+    }
+
+    public OrderListDto(){
+
+    }
+
     public int getOrderId() {
         return orderId;
     }
@@ -41,5 +52,20 @@ public class OrderListDto {
 
     public void setOrderedDate(Date orderedDate) {
         this.orderedDate = orderedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderListDto that = (OrderListDto) o;
+
+        return userId == that.userId;
+    }
+
+    @Override
+    public int hashCode() {
+        return userId;
     }
 }

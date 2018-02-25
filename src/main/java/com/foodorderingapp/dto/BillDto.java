@@ -25,4 +25,25 @@ public class BillDto {
     public void setFoodList(List<Food> foodList) {
         this.foodList = foodList;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BillDto billDto = (BillDto) o;
+
+        if (Double.compare(billDto.balance, balance) != 0) return false;
+        return foodList != null ? foodList.equals(billDto.foodList) : billDto.foodList == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(balance);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (foodList != null ? foodList.hashCode() : 0);
+        return result;
+    }
 }

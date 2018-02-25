@@ -31,4 +31,22 @@ public class OrderDto {
     public void setFoodList(List<FoodQuantity> foodList) {
         this.foodList = foodList;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderDto orderDto = (OrderDto) o;
+
+        if (userId != orderDto.userId) return false;
+        return foodList.equals(orderDto.foodList);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId;
+        result = 31 * result + foodList.hashCode();
+        return result;
+    }
 }
